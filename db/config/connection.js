@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 const { Sequelize } = require("sequelize");
 
 dotenv.config();
-const { NODE_ENV, DATABASE_URL, DEV_DATABASE_URL } = process.env;
+const { DATABASE_NAME, DATABASE_USER_NAME, DATABASE_PASSWORD } = process.env;
 
 // const sequelize = new Sequelize(DEV_DATABASE_URL, {
 //   logging: false,
@@ -16,7 +16,13 @@ const { NODE_ENV, DATABASE_URL, DEV_DATABASE_URL } = process.env;
 //   dialect:'mysql',host:"localhost"
 // });
 
-const sequelize = new Sequelize("moaldiah_education", "moaldiah_root", "059283805928388", {
-  dialect:'mysql',host:"localhost"
-});
+const sequelize = new Sequelize(
+  DATABASE_NAME,
+  DATABASE_USER_NAME,
+  DATABASE_PASSWORD,
+  {
+    dialect: "mysql",
+    host: "localhost",
+  }
+);
 module.exports = sequelize;

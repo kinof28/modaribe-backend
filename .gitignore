@@ -1,0 +1,8 @@
+.env
+/node_modules
+images/*
+moalemy-54d19-firebase-adminsdk-3xshx-5db105a3d9.json
+firebaseConfig.js
+.htaccess
+
+

@@ -4,18 +4,6 @@ const { Sequelize } = require("sequelize");
 dotenv.config();
 const { DATABASE_NAME, DATABASE_USER_NAME, DATABASE_PASSWORD } = process.env;
 
-// const sequelize = new Sequelize(DEV_DATABASE_URL, {
-//   logging: false,
-//   dialect: "postgres",
-// });
-
-// const sequelize = new Sequelize("academy", "root", "root", {
-//   dialect:'mysql',host:"localhost"
-// });
-// const sequelize = new Sequelize("rescteeh_amman_db", "rescteeh_root", "059283805928388", {
-//   dialect:'mysql',host:"localhost"
-// });
-
 const sequelize = new Sequelize(
   DATABASE_NAME,
   DATABASE_USER_NAME,

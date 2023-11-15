@@ -783,8 +783,9 @@ const getAllWallets = async (req, res) => {
     where: {
       isPaid: true,
     },
-    include: [{ model: Student }],
+    order: [["createdAt", "DESC"]],
     limit: 20000,
+    include: [{ model: Student }],
   });
 
   res.send({

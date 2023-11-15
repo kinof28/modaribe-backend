@@ -936,6 +936,7 @@ const getAllWalletsPdf = async (req, res) => {
     where: {
       isPaid: true,
     },
+    order: [["createdAt", "DESC"]],
     include: [{ model: Student }],
     limit: 20000,
   });

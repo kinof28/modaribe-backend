@@ -24,6 +24,7 @@ const {
   getTeacherRate,
   acceptLesson,
   endLesson,
+  getMyStudents,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -109,6 +110,13 @@ teacherRouter.get(
   verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(getAllLessons)
+);
+
+teacherRouter.get(
+  "/students/:TeacherId",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(getMyStudents)
 );
 
 teacherRouter.get(

@@ -25,6 +25,7 @@ const {
   acceptLesson,
   startLesson,
   nearestTeachers,
+  getMyTeachers,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -60,6 +61,7 @@ studentRouter.get("/Credit/:studentId", errorCatcher(getStudentCredit));
 studentRouter.get("/wallet/:studentId", errorCatcher(getWalletHistory));
 
 studentRouter.get("/lessons/:studentId", errorCatcher(getAllLessons));
+studentRouter.get("/teachers/:studentId", errorCatcher(getMyTeachers));
 
 studentRouter.get("/comingLessons/:studentId", errorCatcher(getComingLessons));
 

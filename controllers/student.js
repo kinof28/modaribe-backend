@@ -678,6 +678,30 @@ const getAllLessons = async (req, res) => {
     },
   });
 };
+const getMyTeachers = async (req, res) => {
+  const { studentId } = req.params;
+  const teachers = await Teacher.findAll({
+    include: [
+      {
+        model: Session,
+        on: Session.TeacherId,
+        where: {
+          StudentId: studentId,
+        },
+        attributes: [],
+      },
+    ],
+    attributes: { exclude: ["password"] },
+  });
+  res.send({
+    status: 201,
+    data: teachers,
+    msg: {
+      arabic: "تم ارجاع جميع معلمي التلميذ بنجاح",
+      english: "successful get all student teachers",
+    },
+  });
+};
 
 const getComingLessons = async (req, res) => {
   const { studentId } = req.params;
@@ -991,4 +1015,5 @@ module.exports = {
   acceptLesson,
   startLesson,
   nearestTeachers,
+  getMyTeachers,
 };

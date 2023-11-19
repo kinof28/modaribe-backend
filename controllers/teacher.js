@@ -869,7 +869,7 @@ const signVideoLink = async (req, res) => {
 const searchTeacherFilterSide = async (req, res) => {
   const { videoLink, gender, LanguageId, CurriculumId } = req.body;
   const { currency } = req.query;
-  let whereTeacher = { isVerified: 1 };
+  let whereTeacher = { isVerified: 1, isRegistered: true };
   const whereInclude = [
     {
       model: F2FSessionTeacher,
@@ -912,34 +912,39 @@ const searchTeacherFilterSide = async (req, res) => {
 
   await Promise.all(
     teachers.map(async (teacher) => {
-      if (teacher.RemoteSession !== null) {
-        const newPriceRemote = await currencyConverter
-          .from(teacher.RemoteSession.currency)
-          .to(currency)
-          .amount(+teacher.RemoteSession.priceAfterDiscount)
-          .convert();
-        teacher.RemoteSession.priceAfterDiscount = newPriceRemote;
-        teacher.RemoteSession.currency = currency;
+      try {
+        if (teacher.RemoteSession !== null) {
+          const newPriceRemote = await currencyConverter
+            .from(teacher.RemoteSession.currency)
+            .to(currency)
+            .amount(+teacher.RemoteSession.priceAfterDiscount)
+            .convert();
+          teacher.RemoteSession.priceAfterDiscount = newPriceRemote;
+          teacher.RemoteSession.currency = currency;
+        }
+        if (teacher.F2FSessionStd !== null) {
+          const newPriceF2FStudent = await currencyConverter
+            .from(teacher.F2FSessionStd.currency)
+            .to(currency)
+            .amount(+teacher.F2FSessionStd.priceAfterDiscount)
+            .convert();
+          teacher.F2FSessionStd.priceAfterDiscount = newPriceF2FStudent;
+          teacher.F2FSessionStd.currency = currency;
+        }
+        if (teacher.F2FSessionTeacher !== null) {
+          const newPriceF2FTeacher = await currencyConverter
+            .from(teacher.F2FSessionTeacher.currency)
+            .to(currency)
+            .amount(+teacher.F2FSessionTeacher.priceAfterDiscount)
+            .convert();
+          teacher.F2FSessionTeacher.priceAfterDiscount = newPriceF2FTeacher;
+          teacher.F2FSessionTeacher.currency = currency;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        return teacher;
       }
-      if (teacher.F2FSessionStd !== null) {
-        const newPriceF2FStudent = await currencyConverter
-          .from(teacher.F2FSessionStd.currency)
-          .to(currency)
-          .amount(+teacher.F2FSessionStd.priceAfterDiscount)
-          .convert();
-        teacher.F2FSessionStd.priceAfterDiscount = newPriceF2FStudent;
-        teacher.F2FSessionStd.currency = currency;
-      }
-      if (teacher.F2FSessionTeacher !== null) {
-        const newPriceF2FTeacher = await currencyConverter
-          .from(teacher.F2FSessionTeacher.currency)
-          .to(currency)
-          .amount(+teacher.F2FSessionTeacher.priceAfterDiscount)
-          .convert();
-        teacher.F2FSessionTeacher.priceAfterDiscount = newPriceF2FTeacher;
-        teacher.F2FSessionTeacher.currency = currency;
-      }
-      return teacher;
     })
   );
 

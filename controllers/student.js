@@ -932,7 +932,6 @@ const startLesson = async (req, res) => {
 
 const nearestTeachers = async (req, res) => {
   const { StudentId } = req.params;
-  // const { distance } = req.body;
 
   const student = await Student.findOne({
     where: {
@@ -945,14 +944,10 @@ const nearestTeachers = async (req, res) => {
       arabic: "الطالب غير موجودة",
       english: "student not found",
     });
-
-  // if (!distance)
-  //   throw serverErrs.BAD_REQUEST({
-  //     arabic: "المسافة غير موجودة",
-  //     english: "distance not found",
-  //   });
-
-  const teachers = await Teacher.findAll({});
+  const teachers = await Teacher.findAll({
+    include:[{model:TeacherSubject,on:TeacherSubject.TeacherId,include:[{model:Subject,on:Subject.id}]}],
+    attributes:{exclude:["password"]},
+  });
 
   const lon1 = student.long;
   const lat1 = student.lat;

@@ -20,6 +20,7 @@ const { PDFDocument } = require("pdf-lib");
 const path = require("path");
 const fs = require("fs");
 const pdf = require("html-pdf");
+const sendEmail = require("../middlewares/sendEmail");
 
 const {
   validateAdminSignUp,
@@ -109,40 +110,127 @@ const login = async (req, res) => {
 };
 
 // Added by Abdelwahab
-// TODO
 const createStudent = async (req, res) => {
-  // const image = req.file.filename;
-  // const { titleAR, titleEN } = req.body;
-  // const newSubjectCategory = await SubjectCategory.create(
-  //   {
-  //     titleAR,
-  //     titleEN,
-  //     image,
-  //   },
-  //   {
-  //     returning: true,
-  //   }
-  // );
-  // await newSubjectCategory.save();
-  console.log("req: ", req);
+  const { email, phoneNumber, name, location, password } = req.body;
+  const teacher = await Teacher.findOne({
+    where: {
+      email,
+    },
+  });
+
+  const student = await Student.findOne({
+    where: {
+      email,
+    },
+  });
+  const parent = await Parent.findOne({
+    where: {
+      email,
+    },
+  });
+  if (teacher || student || parent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم سابقا",
+      english: "email is already used",
+    });
+  hashedPassword = await hash(password, 12);
+  const newStudent = await Student.create({
+    email,
+    name,
+    location,
+    phoneNumber: "+" + phoneNumber,
+    password: hashedPassword,
+    isRegistered: true,
+  });
+  const mailOptions = {
+    from: "info@moalime.com",
+    to: email,
+    subject: "moalime: New Student Account",
+    html: `<div style="text-align: right;"> مرحبًا ، <br> 
+       يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع معلمي <br>
+    يمكنك تسجيل الدخول الآن باستخدام هذا الإيميل وكلمة السر: ${password} <br>
+    .حظًا سعيدًا <br>
+    ,فريق معلمي
+    </div>`,
+  };
+  const smsOptions = {
+    body: ` مرحبًا ، 
+    يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع معلمي 
+ يمكنك تسجيل الدخول الآن باستخدام هذا الإيميل وكلمة السر: ${password} 
+ .حظًا سعيدًا
+    ,فريق معلمي
+    `,
+    to: phoneNumber,
+  };
+  sendEmail(mailOptions, smsOptions);
   res.send({
     status: 201,
     data: null,
     msg: {
-      arabic: "تم إنشاء المادة العامة بنجاح",
-      english: "successful create new SubjectCategory",
+      arabic: "تم إنشاء الحساب بنجاح",
+      english: "successfully created new account",
     },
   });
 };
-// TODO
 const createTeacher = async (req, res) => {
-  console.log("req: ", req);
+  const { email, phone, password } = req.body;
+  const teacher = await Teacher.findOne({
+    where: {
+      email,
+    },
+  });
+
+  const student = await Student.findOne({
+    where: {
+      email,
+    },
+  });
+
+  const parent = await Parent.findOne({
+    where: {
+      email,
+    },
+  });
+  if (teacher || student || parent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الإيميل مستخدم سابقا",
+      english: "email is already used",
+    });
+  hashedPassword = await hash(password, 12);
+  const newTeacher = await Teacher.create({
+    email,
+    phone: "+" + phone,
+    password: hashedPassword,
+    isRegistered: true,
+    isVerified: true,
+  });
+  const mailOptions = {
+    from: "info@moalime.com",
+    to: email,
+    subject: "moalime: New Teacher Account",
+    html: `<div style="text-align: right;"> مرحبًا ، <br> 
+       يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع معلمي <br>
+    يمكنك تسجيل الدخول الآن كمعلم باستخدام هذا الإيميل وكلمة السر: ${password} <br>
+    .حظًا سعيدًا <br>
+    ,فريق معلمي
+    </div>`,
+  };
+  const smsOptions = {
+    body: ` مرحبًا ، 
+    يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع معلمي 
+ يمكنك تسجيل الدخول الآن كمعلم باستخدام هذا الإيميل وكلمة السر: ${password} 
+ .حظًا سعيدًا
+    ,فريق معلمي
+    `,
+    to: phone,
+  };
+  sendEmail(mailOptions, smsOptions);
   res.send({
     status: 201,
     data: null,
     msg: {
-      arabic: "تم إنشاء المادة العامة بنجاح",
-      english: "successful create new SubjectCategory",
+      arabic: "تم إنشاء الحساب بنجاح",
+      english: "successfully created new account",
     },
   });
 };

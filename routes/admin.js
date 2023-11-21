@@ -62,6 +62,8 @@ const {
   getProfitRatio,
   getNewCheckoutRequests,
   getProcessedCheckoutRequests,
+  acceptCheckout,
+  rejectCheckout,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -183,6 +185,18 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getProcessedCheckoutRequests)
+);
+adminRouter.get(
+  "/checkout/accept/:checkoutId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(acceptCheckout)
+);
+adminRouter.get(
+  "/checkout/reject/:checkoutId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(rejectCheckout)
 );
 
 adminRouter.post(

@@ -179,6 +179,53 @@ const getProcessedCheckoutRequests = async (req, res) => {
   });
 };
 
+const acceptCheckout = async (req, res) => {
+  const { checkoutId } = req.params;
+  const checkout = await CheckoutRequest.findOne({
+    where: {
+      id: checkoutId,
+    },
+  });
+  if (!checkout) {
+    throw new serverErrs.BAD_REQUEST({
+      arabic: "طلب الدفع غير موجود",
+      english: "checkout request not found",
+    });
+  }
+  await checkout.update({ status: 1 });
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم قبول طلب الدفع بنجاح",
+      english: "successful accepting Checkout Requests",
+    },
+  });
+};
+
+const rejectCheckout = async (req, res) => {
+  const { checkoutId } = req.params;
+  const checkout = await CheckoutRequest.findOne({
+    where: {
+      id: checkoutId,
+    },
+  });
+  if (!checkout) {
+    throw new serverErrs.BAD_REQUEST({
+      arabic: "طلب الدفع غير موجود",
+      english: "checkout request not found",
+    });
+  }
+  await checkout.update({ status: -1 });
+
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم رفض طلب الدفع بنجاح",
+      english: "successful rejecting Checkout Requests",
+    },
+  });
+};
+
 const createSubjectCategory = async (req, res) => {
   const image = req.file.filename;
   const { titleAR, titleEN } = req.body;
@@ -1934,4 +1981,6 @@ module.exports = {
   getProfitRatio,
   getNewCheckoutRequests,
   getProcessedCheckoutRequests,
+  acceptCheckout,
+  rejectCheckout,
 };

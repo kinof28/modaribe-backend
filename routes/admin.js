@@ -15,6 +15,8 @@ const {
   getCurriculums,
   getSingleCurriculum,
   createSubjectCategory,
+  createStudent,
+  createTeacher,
   createSubject,
   createLevel,
   createClass,
@@ -58,6 +60,8 @@ const {
   deleteTeacher,
   deleteStudent,
   getProfitRatio,
+  getNewCheckoutRequests,
+  getProcessedCheckoutRequests,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -68,7 +72,18 @@ const { getCredit } = require("../controllers/teacher");
 adminRouter.post("/signup", errorCatcher(signUp));
 adminRouter.post("/login", errorCatcher(login));
 adminRouter.post("/logout", logout);
-
+adminRouter.post(
+  "/createStudent",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(createStudent)
+);
+adminRouter.post(
+  "/createTeacher",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(createTeacher)
+);
 adminRouter.post(
   "/subjectCategory",
   verifyToken,
@@ -153,6 +168,21 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getParentStudentAccOrRej)
+);
+
+// Added by Abdelwahab
+adminRouter.get(
+  "/getNewCheckoutRequests",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getNewCheckoutRequests)
+);
+
+adminRouter.get(
+  "/getProcessedCheckoutRequests",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(getProcessedCheckoutRequests)
 );
 
 adminRouter.post(

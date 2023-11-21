@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db/config/connection");
 
-const ParentStudent = sequelize.define("ParentStudent", {
+const CheckoutRequest = sequelize.define("CheckoutRequest", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -12,6 +12,10 @@ const ParentStudent = sequelize.define("ParentStudent", {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  value: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
 });
 
-module.exports = ParentStudent;
+module.exports = CheckoutRequest;

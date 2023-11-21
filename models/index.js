@@ -29,6 +29,8 @@ const LanguageLevel = require("./LanguageLevel");
 const Rate = require("./Rate");
 const FinancialRecord = require("./financialRecord");
 const SocialMedia = require("./SocialMedia");
+// Added by Abdelwahab
+const CheckoutRequest = require("./CheckoutRequest");
 
 Teacher.hasMany(LangTeachStd);
 LangTeachStd.belongsTo(Teacher);
@@ -111,6 +113,10 @@ Rate.belongsTo(Student);
 Teacher.hasMany(FinancialRecord);
 FinancialRecord.belongsTo(Teacher);
 
+// Added by Abdelwahab
+Teacher.hasMany(CheckoutRequest);
+CheckoutRequest.belongsTo(Teacher);
+
 module.exports = {
   Admin,
   Student,
@@ -142,4 +148,5 @@ module.exports = {
   FinancialRecord,
   Rate,
   SocialMedia,
+  CheckoutRequest,
 };

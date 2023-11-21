@@ -14,6 +14,7 @@ const {
   Wallet,
   Parent,
   SocialMedia,
+  CheckoutRequest,
 } = require("../models");
 const { PDFDocument } = require("pdf-lib");
 const path = require("path");
@@ -104,6 +105,77 @@ const login = async (req, res) => {
     data: admin,
     msg: { arabic: "تم تسجيل الدخول بنجاح", english: "successful log in" },
     token: token,
+  });
+};
+
+// Added by Abdelwahab
+// TODO
+const createStudent = async (req, res) => {
+  // const image = req.file.filename;
+  // const { titleAR, titleEN } = req.body;
+  // const newSubjectCategory = await SubjectCategory.create(
+  //   {
+  //     titleAR,
+  //     titleEN,
+  //     image,
+  //   },
+  //   {
+  //     returning: true,
+  //   }
+  // );
+  // await newSubjectCategory.save();
+  console.log("req: ", req);
+  res.send({
+    status: 201,
+    data: null,
+    msg: {
+      arabic: "تم إنشاء المادة العامة بنجاح",
+      english: "successful create new SubjectCategory",
+    },
+  });
+};
+// TODO
+const createTeacher = async (req, res) => {
+  console.log("req: ", req);
+  res.send({
+    status: 201,
+    data: null,
+    msg: {
+      arabic: "تم إنشاء المادة العامة بنجاح",
+      english: "successful create new SubjectCategory",
+    },
+  });
+};
+
+const getNewCheckoutRequests = async (req, res) => {
+  const checkouts = await CheckoutRequest.findAll({
+    where: { status: { [Op.eq]: 0 } },
+    order: [["createdAt", "DESC"]],
+    include: [{ model: Teacher }],
+  });
+  res.send({
+    status: 201,
+    data: checkouts,
+    msg: {
+      arabic: "تم إرجاع جميع طلبات الدفع الجديدة",
+      english: "successful get new Checkout Requests",
+    },
+  });
+};
+
+const getProcessedCheckoutRequests = async (req, res) => {
+  const checkouts = await CheckoutRequest.findAll({
+    where: { status: { [Op.ne]: 0 } },
+    order: [["updatedAt", "DESC"]],
+    include: [{ model: Teacher }],
+  });
+  res.send({
+    status: 201,
+    data: checkouts,
+    msg: {
+      arabic: "تم إرجاع جميع طلبات الدفع المنتهية",
+      english: "successful get processed Checkout Requests",
+    },
   });
 };
 
@@ -1804,6 +1876,8 @@ const getProfitRatio = async (req, res) => {
 module.exports = {
   signUp,
   login,
+  createStudent,
+  createTeacher,
   createSubjectCategory,
   createSubject,
   createLevel,
@@ -1858,4 +1932,6 @@ module.exports = {
   deleteTeacher,
   deleteStudent,
   getProfitRatio,
+  getNewCheckoutRequests,
+  getProcessedCheckoutRequests,
 };

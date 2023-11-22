@@ -70,10 +70,12 @@ const logout = require("../middlewares/logout");
 const verifyToken = require("../middlewares/verifyToken");
 const errorCatcher = require("../middlewares/errorCatcher");
 const { getCredit } = require("../controllers/teacher");
+const { editPersonalInformation } = require("../controllers/student");
 
 adminRouter.post("/signup", errorCatcher(signUp));
 adminRouter.post("/login", errorCatcher(login));
 adminRouter.post("/logout", logout);
+// Added by Abdelwahab
 adminRouter.post(
   "/createStudent",
   verifyToken,
@@ -86,6 +88,13 @@ adminRouter.post(
   checkUserAuth("admin"),
   errorCatcher(createTeacher)
 );
+adminRouter.post(
+  "/edit/student/:StudentId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(editPersonalInformation)
+);
+
 adminRouter.post(
   "/subjectCategory",
   verifyToken,

@@ -15,6 +15,7 @@ const {
   Parent,
   SocialMedia,
   CheckoutRequest,
+  LangTeachStd,
 } = require("../models");
 const { PDFDocument } = require("pdf-lib");
 const path = require("path");
@@ -2008,6 +2009,190 @@ const getProfitRatio = async (req, res) => {
   });
 };
 
+// Added by Abdelwahab
+
+const signAbout = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
+
+  const { firstName, lastName, gender, dateOfBirth, phone, country, city } =
+    req.body;
+  let { languages } = req.body;
+  if (typeof languages === "string") {
+    languages = JSON.parse(languages);
+  }
+  await teacher.update({
+    firstName,
+    lastName,
+    gender,
+    dateOfBirth,
+    phone,
+    country,
+    city,
+  });
+  const langTeacher = await LangTeachStd.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await LangTeachStd.bulkCreate(languages).then(() =>
+    console.log("LangTeachStd data have been created")
+  );
+
+  const langTeachers = await LangTeachStd.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+  await teacher.save();
+  const firstNames = teacher.firstName;
+  const lastNames = teacher.lastName;
+
+  res.send({
+    status: 201,
+    data: { firstName: firstNames, lastName: lastNames },
+    msg: {
+      arabic: "تم تسجيل معلوماتك بنجاح",
+      english: "successful sign about data",
+    },
+  });
+};
+
+const uploadImage = async (req, res) => {
+  const { teacherId } = req.params;
+
+  if (!req.file)
+    throw serverErrs.BAD_REQUEST({
+      arabic: " الصورة غير موجودة ",
+      english: "Image not exist ",
+    });
+
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
+
+  const clearImage = (filePath) => {
+    filePath = path.join(__dirname, "..", `images/${filePath}`);
+    fs.unlink(filePath, (err) => {
+      if (err) throw serverErrs.BAD_REQUEST("Image not found");
+    });
+  };
+
+  if (teacher.image) {
+    clearImage(teacher.image);
+  }
+  await teacher.update({ image: req.file.filename });
+  res.send({
+    status: 201,
+    data: req.file.filename,
+    msg: {
+      arabic: "تم إدراج الصورة بنجاح",
+      english: "uploaded image successfully",
+    },
+  });
+};
+
+const signAdditionalInfo = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({
+    where: { id: teacherId },
+    attributes: { exclude: ["password"] },
+  });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
+
+  const {
+    haveCertificates,
+    haveExperience,
+    experienceYears,
+    favStdGender,
+    favHours,
+    articleExperience,
+    bank_name,
+    acc_name,
+    acc_number,
+    iban,
+    paypal_acc,
+  } = req.body;
+
+  let { levels, curriculums } = req.body;
+  if (typeof levels === "string") {
+    levels = JSON.parse(levels);
+  }
+  if (typeof curriculums === "string") {
+    curriculums = JSON.parse(curriculums);
+  }
+
+  await teacher.update({
+    haveCertificates,
+    haveExperience,
+    experienceYears,
+    favStdGender,
+    favHours,
+    articleExperience,
+    bank_name,
+    acc_name,
+    acc_number,
+    iban,
+    paypal_acc,
+  });
+  const curriculumTeacher = await CurriculumTeacher.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  const teacherLevel = await TeacherLevel.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await TeacherLevel.bulkCreate(levels).then(() =>
+    console.log("LangTeachStd data have been created")
+  );
+  await CurriculumTeacher.bulkCreate(curriculums).then(() =>
+    console.log("LangTeachStd data have been created")
+  );
+
+  const teacherLevels = await TeacherLevel.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+
+  const curriculumTeachers = await CurriculumTeacher.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+  await teacher.save();
+
+  res.send({
+    status: 201,
+    data: { teacher, teacherLevels, curriculumTeachers },
+    msg: {
+      arabic: "تم تسجيل معلومات إضافية بنجاح",
+      english: "successful sign Additional Information! ",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -2071,4 +2256,7 @@ module.exports = {
   getProcessedCheckoutRequests,
   acceptCheckout,
   rejectCheckout,
+  signAbout,
+  uploadImage,
+  signAdditionalInfo,
 };

@@ -64,12 +64,22 @@ const {
   getProcessedCheckoutRequests,
   acceptCheckout,
   rejectCheckout,
+  signAbout,
+  signAdditionalInfo,
+  uploadImage,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
 const verifyToken = require("../middlewares/verifyToken");
 const errorCatcher = require("../middlewares/errorCatcher");
-const { getCredit } = require("../controllers/teacher");
+const {
+  getCredit,
+  addSubjects,
+  signResume,
+  signAvailability,
+  signVideoLink,
+  addDescription,
+} = require("../controllers/teacher");
 const { editPersonalInformation } = require("../controllers/student");
 
 adminRouter.post("/signup", errorCatcher(signUp));
@@ -94,6 +104,63 @@ adminRouter.post(
   checkUserAuth("admin"),
   errorCatcher(editPersonalInformation)
 );
+// -----------------------------------
+adminRouter.post(
+  "/edit/teacher/about/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(signAbout)
+);
+adminRouter.post(
+  "/edit/teacher/image/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(uploadImage)
+);
+
+adminRouter.post(
+  "/edit/teacher/additionalInfo/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(signAdditionalInfo)
+);
+
+adminRouter.post(
+  "/edit/teacher/subjects/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(addSubjects)
+);
+
+adminRouter.post(
+  "/edit/teacher/resume/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(signResume)
+);
+
+adminRouter.post(
+  "/edit/teacher/availability/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(signAvailability)
+);
+
+adminRouter.post(
+  "/edit/teacher/VideoLink/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(signVideoLink)
+);
+
+adminRouter.post(
+  "/edit/teacher/description/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(addDescription)
+);
+
+// ------------------------------------
 
 adminRouter.post(
   "/subjectCategory",

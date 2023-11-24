@@ -21,6 +21,9 @@ const {
   RemoteSession,
   F2FSessionStd,
   F2FSessionTeacher,
+  Certificates,
+  Experience,
+  EducationDegree,
 } = require("../models");
 const { PDFDocument } = require("pdf-lib");
 const path = require("path");
@@ -2320,6 +2323,115 @@ const addSubjects = async (req, res) => {
   });
 };
 
+const signResume = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
+
+  let { certificates, experiences, educationDegrees } = req.body;
+
+  if (typeof certificates === "string") {
+    certificates = JSON.parse(certificates);
+  }
+  if (typeof experiences === "string") {
+    experiences = JSON.parse(experiences);
+  }
+  if (typeof educationDegrees === "string") {
+    educationDegrees = JSON.parse(educationDegrees);
+  }
+
+  const teacherCertificate = await Certificates.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  const teacherExperience = await Experience.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  const teacherEducationDegree = await EducationDegree.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await Certificates.bulkCreate(certificates).then(() =>
+    console.log("Certificates data have been created")
+  );
+  await Experience.bulkCreate(experiences).then(() =>
+    console.log("Experience data have been created")
+  );
+  await EducationDegree.bulkCreate(educationDegrees).then(() =>
+    console.log("EducationDegree data have been created")
+  );
+
+  const teacherCertificates = await Certificates.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+
+  const teacherExperiences = await Experience.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+
+  const teacherEducationDegrees = await EducationDegree.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+  });
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: { teacherCertificates, teacherExperiences, teacherEducationDegrees },
+    msg: {
+      arabic: "تم إدخال معلومات السيرة الذاتية بنجاح",
+      english: "successful sign Resume Information!",
+    },
+  });
+};
+
+const signVideoLink = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({
+    where: { id: teacherId },
+    attributes: { exclude: ["password"] },
+  });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
+
+  const { videoLink } = req.body;
+
+  await teacher.update({
+    videoLink,
+  });
+
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: teacher,
+    msg: {
+      arabic: "تم إدراج الفيديو بنجاح",
+      english: "successful sign VideoLink Information!",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -2387,4 +2499,6 @@ module.exports = {
   uploadImage,
   signAdditionalInfo,
   addSubjects,
+  signResume,
+  signVideoLink,
 };

@@ -67,6 +67,7 @@ const {
   signAbout,
   signAdditionalInfo,
   uploadImage,
+  addSubjects,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -74,7 +75,6 @@ const verifyToken = require("../middlewares/verifyToken");
 const errorCatcher = require("../middlewares/errorCatcher");
 const {
   getCredit,
-  addSubjects,
   signResume,
   signAvailability,
   signVideoLink,

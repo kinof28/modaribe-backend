@@ -16,6 +16,11 @@ const {
   SocialMedia,
   CheckoutRequest,
   LangTeachStd,
+  CurriculumTeacher,
+  TeacherLevel,
+  RemoteSession,
+  F2FSessionStd,
+  F2FSessionTeacher,
 } = require("../models");
 const { PDFDocument } = require("pdf-lib");
 const path = require("path");
@@ -35,6 +40,7 @@ const { Op } = require("sequelize");
 const FinancialRecord = require("../models/financialRecord");
 const { Notifications } = require("../firebaseConfig");
 const { promisify } = require("util");
+const TeacherSubject = require("../models/TeacherSubject");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
@@ -2193,6 +2199,127 @@ const signAdditionalInfo = async (req, res) => {
   });
 };
 
+const addSubjects = async (req, res) => {
+  const { teacherId } = req.params;
+
+  const teacher = await Teacher.findOne({ where: { id: teacherId } });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
+
+  let { remote, f2fStudent, f2fTeacher, subjects } = req.body;
+
+  if (typeof subjects === "string") {
+    subjects = JSON.parse(subjects);
+  }
+  if (typeof remote === "string") {
+    remote = JSON.parse(remote);
+  }
+  if (typeof f2fStudent === "string") {
+    f2fStudent = JSON.parse(f2fStudent);
+  }
+  if (typeof f2fTeacher === "string") {
+    f2fTeacher = JSON.parse(f2fTeacher);
+  }
+
+  await TeacherSubject.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await RemoteSession.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+  await F2FSessionStd.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+  await F2FSessionTeacher.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+  await TeacherSubject.bulkCreate(subjects).then(() =>
+    console.log("Teacher Subjects data have been created")
+  );
+  if (remote) {
+    remote["priceAfterDiscount"] =
+      +remote.price - +remote.price * (+remote.discount / 100.0);
+    await RemoteSession.create(remote).then(() =>
+      console.log("Teacher remote session has been saved")
+    );
+  }
+  if (f2fStudent) {
+    f2fStudent["priceAfterDiscount"] =
+      +f2fStudent.price - +f2fStudent.price * (+f2fStudent.discount / 100.0);
+    await F2FSessionStd.create(f2fStudent).then(() =>
+      console.log("teacher session at home student has been saved")
+    );
+  }
+  if (f2fTeacher) {
+    f2fTeacher["priceAfterDiscount"] =
+      +f2fTeacher.price - +f2fTeacher.price * (+f2fTeacher.discount / 100.0);
+    await F2FSessionTeacher.create(f2fTeacher).then(() =>
+      console.log("Teacher session at teacher home has been saved")
+    );
+  }
+
+  const teacherSubjects = await TeacherSubject.findAll({
+    where: {
+      TeacherId: teacherId,
+    },
+    include: {
+      all: true,
+    },
+  });
+
+  const remoteSession = await RemoteSession.findAll({
+    where: {
+      TeacherId: teacherId,
+    },
+    include: {
+      all: true,
+    },
+  });
+
+  const f2fStudentSession = await F2FSessionStd.findAll({
+    where: {
+      TeacherId: teacherId,
+    },
+    include: {
+      all: true,
+    },
+  });
+
+  const f2fTeacherSession = await F2FSessionTeacher.findAll({
+    where: {
+      TeacherId: teacherId,
+    },
+    include: {
+      all: true,
+    },
+  });
+  res.send({
+    status: 201,
+    data: {
+      teacherSubjects,
+      remoteSession,
+      f2fStudentSession,
+      f2fTeacherSession,
+    },
+    msg: {
+      arabic: "تم إضافة مادة ونوع الجلسة بنجاح",
+      english: "added subjects and session type successfully",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -2259,4 +2386,5 @@ module.exports = {
   signAbout,
   uploadImage,
   signAdditionalInfo,
+  addSubjects,
 };

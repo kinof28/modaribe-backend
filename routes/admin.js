@@ -70,16 +70,14 @@ const {
   addSubjects,
   signResume,
   signVideoLink,
+  signAvailability,
+  addDescription,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
 const verifyToken = require("../middlewares/verifyToken");
 const errorCatcher = require("../middlewares/errorCatcher");
-const {
-  getCredit,
-  signAvailability,
-  addDescription,
-} = require("../controllers/teacher");
+const { getCredit } = require("../controllers/teacher");
 const { editPersonalInformation } = require("../controllers/student");
 
 adminRouter.post("/signup", errorCatcher(signUp));

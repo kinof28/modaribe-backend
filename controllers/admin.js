@@ -24,6 +24,7 @@ const {
   Certificates,
   Experience,
   EducationDegree,
+  TeacherDay,
 } = require("../models");
 const { PDFDocument } = require("pdf-lib");
 const path = require("path");
@@ -2402,6 +2403,87 @@ const signResume = async (req, res) => {
     },
   });
 };
+const signAvailability = async (req, res) => {
+  const { teacherId } = req.params;
+  const teacher = await Teacher.findOne({
+    where: { id: teacherId },
+    attributes: { exclude: ["password"] },
+  });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
+
+  const { timeZone } = req.body;
+  let { teacherDayes } = req.body;
+
+  if (typeof teacherDayes === "string") {
+    teacherDayes = JSON.parse(teacherDayes);
+  }
+
+  await teacher.update({
+    timeZone,
+  });
+  const teacherDay = await TeacherDay.destroy({
+    where: {
+      TeacherId: teacher.id,
+    },
+  });
+
+  await TeacherDay.bulkCreate(teacherDayes).then(() =>
+    console.log("TeacherDay data have been created")
+  );
+
+  const dayesTeacher = await TeacherDay.findAll({
+    where: {
+      TeacherId: teacher.id,
+    },
+    include: { all: true },
+    attributes: { exclude: ["password"] },
+  });
+
+  await teacher.save();
+  res.send({
+    status: 201,
+    data: { teacher, dayesTeacher },
+    msg: {
+      arabic: "تم تسجيل الوقت المتاح بنجاح",
+      english: "successful sign availability!",
+    },
+  });
+};
+
+const addDescription = async (req, res) => {
+  const { teacherId } = req.params;
+
+  const teacher = await Teacher.findOne({
+    where: { id: teacherId },
+    attributes: { exclude: ["password"] },
+  });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
+  const { shortHeadlineAr, shortHeadlineEn, descriptionAr, descriptionEn } =
+    req.body;
+
+  const updatedTeacher = await teacher.update({
+    shortHeadlineAr,
+    shortHeadlineEn,
+    descriptionAr,
+    descriptionEn,
+  });
+  res.send({
+    status: 201,
+    data: updatedTeacher,
+    msg: {
+      arabic: "تم إضافة وصف بنجاح",
+      english: "added description successfully",
+    },
+  });
+};
 
 const signVideoLink = async (req, res) => {
   const { teacherId } = req.params;
@@ -2500,5 +2582,7 @@ module.exports = {
   signAdditionalInfo,
   addSubjects,
   signResume,
+  signAvailability,
+  addDescription,
   signVideoLink,
 };

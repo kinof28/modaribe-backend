@@ -72,6 +72,11 @@ const {
   signVideoLink,
   signAvailability,
   addDescription,
+  deleteLevel,
+  deleteClass,
+  deleteCurriculum,
+  deleteSubjectCategory,
+  deleteSubject,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -489,6 +494,43 @@ adminRouter.get(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(getProfitRatio)
+);
+
+// --------------Added by Abdelwahab----------------------
+
+adminRouter.delete(
+  "/level/:levelId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(deleteLevel)
+);
+
+adminRouter.delete(
+  "/class/:classId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(deleteClass)
+);
+
+adminRouter.delete(
+  "/curriculum/:curriculumId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(deleteCurriculum)
+);
+
+adminRouter.delete(
+  "/subjectCategory/:categoryId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(deleteSubjectCategory)
+);
+
+adminRouter.delete(
+  "/subject/:subjectId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(deleteSubject)
 );
 
 module.exports = adminRouter;

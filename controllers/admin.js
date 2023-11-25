@@ -2514,6 +2514,169 @@ const signVideoLink = async (req, res) => {
   });
 };
 
+// ----------------------
+const deleteLevel = async (req, res) => {
+  const { levelId } = req.params;
+  const level = await Level.findOne({
+    where: { id: levelId },
+  });
+  if (!level)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المستوى غير موجود",
+      english: "Invalid levelId! ",
+    });
+  const classes = await Class.findAll({
+    where: {
+      LevelId: levelId,
+    },
+  });
+  classes.forEach(async (classItem) => {
+    await classItem.destroy();
+  });
+
+  const curriculumLevels = await CurriculumLevel.findAll({
+    where: {
+      LevelId: levelId,
+    },
+  });
+  curriculumLevels.forEach(async (curriculumLevel) => {
+    await curriculumLevel.destroy();
+  });
+  const teacherLevels = await TeacherLevel.findAll({
+    where: {
+      LevelId: levelId,
+    },
+  });
+  teacherLevels.forEach(async (teacherLevel) => {
+    await teacherLevel.destroy();
+  });
+  await level.destroy();
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم حذف المستوى بنجاح",
+      english: "successfully delete level!",
+    },
+  });
+};
+
+const deleteClass = async (req, res) => {
+  const { classId } = req.params;
+  const clss = await Class.findOne({
+    where: { id: classId },
+  });
+  if (!clss)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الصف غير موجود",
+      english: "Invalid classId! ",
+    });
+  await clss.destroy();
+
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم حذف القسم بنجاح",
+      english: "successfully delete class!",
+    },
+  });
+};
+const deleteCurriculum = async (req, res) => {
+  const { curriculumId } = req.params;
+  console.log("trying to delete curruculum with id = ", curriculumId);
+  const curriculum = await Curriculum.findOne({
+    where: { id: curriculumId },
+  });
+  if (!curriculum)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المنهج غير موجود",
+      english: "Invalid curriculumId! ",
+    });
+  const curriculumLevels = await CurriculumLevel.findAll({
+    where: {
+      CurriculumId: curriculumId,
+    },
+  });
+  curriculumLevels.forEach(async (curriculumLevel) => {
+    await curriculumLevel.destroy();
+  });
+  const curriculumTeachers = await CurriculumTeacher.findAll({
+    where: {
+      CurriculumId: curriculumId,
+    },
+  });
+  curriculumTeachers.forEach(async (curriculumTeacher) => {
+    await curriculumTeacher.destroy();
+  });
+  await curriculum.destroy();
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم حذف المنهج بنجاح",
+      english: "successfully delete curriculum!",
+    },
+  });
+};
+
+const deleteSubjectCategory = async (req, res) => {
+  const { categoryId } = req.params;
+  console.log("trying to delete subjectCategory with id = ", categoryId);
+  const subjectCategorie = await SubjectCategory.findOne({
+    where: { id: categoryId },
+  });
+  if (!subjectCategorie)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "التصنيف غير موجود",
+      english: "Invalid categoryId! ",
+    });
+  const subjects = await Subject.findAll({
+    where: {
+      SubjectCategoryId: categoryId,
+    },
+  });
+
+  subjects.forEach(async (sub) => {
+    await sub.destroy();
+  });
+  await subjectCategorie.destroy();
+
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم حذف المادة بنجاح",
+      english: "successfully delete category!",
+    },
+  });
+};
+const deleteSubject = async (req, res) => {
+  const { subjectId } = req.params;
+  console.log("trying to delete subject with id = ", subjectId);
+  const subject = await Subject.findOne({
+    where: { id: subjectId },
+  });
+  if (!subject)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الموضوع غير موجود",
+      english: "Invalid subjectId! ",
+    });
+  const teacherSubjects = await TeacherSubject.findAll({
+    where: {
+      SubjectId: subjectId,
+    },
+  });
+  teacherSubjects.forEach(async (teacherSubject) => {
+    await teacherSubject.destroy();
+  });
+  await subject.destroy();
+
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم حذف الموضوع بنجاح",
+      english: "successfully delete subject!",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -2585,4 +2748,9 @@ module.exports = {
   signAvailability,
   addDescription,
   signVideoLink,
+  deleteLevel,
+  deleteClass,
+  deleteCurriculum,
+  deleteSubjectCategory,
+  deleteSubject,
 };

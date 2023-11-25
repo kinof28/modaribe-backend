@@ -78,6 +78,10 @@ const Student = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    isSuspended: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     defaultScope: {

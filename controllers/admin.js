@@ -2677,6 +2677,258 @@ const deleteSubject = async (req, res) => {
   });
 };
 
+const suspendTeacher = async (req, res) => {
+  const { teacherId } = req.params;
+  console.log("trying to suspend teacher with id = ", teacherId);
+  const teacher = await Teacher.findOne({
+    where: { id: teacherId },
+  });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
+  await teacher.update({
+    isSuspended: true,
+  });
+  const mailOptions = {
+    from: "info@moalime.com",
+    to: teacher.email,
+    subject: "moalime: Account Suspended",
+    html: `<div style="text-align: right;"> مرحبًا ، <br> 
+    <br>.يؤسفنا أن نحيطك علما أن مدير موقع معلمي قام بتوقيف حسابك توقيفا مؤقتا
+    <br>.الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
+    <br>.في الأثناء لا يمكنك استخدام خدمات موقع معلمي
+    .حظًا سعيدًا <br>
+    ,فريق معلمي
+    </div>`,
+  };
+  const smsOptions = {
+    body: `مرحبًا ،
+    .يؤسفنا أن نحيطك علما أن مدير موقع معلمي قام بتوقيف حسابك توقيفا مؤقتا
+    .الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
+    .في الأثناء لا يمكنك استخدام خدمات موقع معلمي
+    .حظًا سعيدًا 
+    ,فريق معلمي`,
+    to: teacher.phone,
+  };
+  sendEmail(mailOptions, smsOptions);
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم ايقاف المعلم بنجاح",
+      english: "successfully suspended teacher!",
+    },
+  });
+};
+const suspendStudent = async (req, res) => {
+  const { studentId } = req.params;
+  console.log("trying to suspend student with id = ", studentId);
+  const student = await Student.findOne({
+    where: { id: studentId },
+  });
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الطالب غير موجود",
+      english: "Invalid studentId! ",
+    });
+  await student.update({
+    isSuspended: true,
+  });
+  const mailOptions = {
+    from: "info@moalime.com",
+    to: student.email,
+    subject: "moalime: Account Suspended",
+    html: `<div style="text-align: right;"> مرحبًا ، <br> 
+    <br>.يؤسفنا أن نحيطك علما أن مدير موقع معلمي قام بتوقيف حسابك توقيفا مؤقتا
+    <br>.الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
+    <br>.في الأثناء لا يمكنك استخدام خدمات موقع معلمي
+    .حظًا سعيدًا <br>
+    ,فريق معلمي
+    </div>`,
+  };
+  const smsOptions = {
+    body: `مرحبًا ،
+    .يؤسفنا أن نحيطك علما أن مدير موقع معلمي قام بتوقيف حسابك توقيفا مؤقتا
+    .الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
+    .في الأثناء لا يمكنك استخدام خدمات موقع معلمي
+    .حظًا سعيدًا 
+    ,فريق معلمي`,
+    to: student.phoneNumber,
+  };
+  sendEmail(mailOptions, smsOptions);
+
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم ايقاف الطالب بنجاح",
+      english: "successfully suspended student!",
+    },
+  });
+};
+const unSuspendTeacher = async (req, res) => {
+  const { teacherId } = req.params;
+  console.log("trying to unSuspend teacher with id = ", teacherId);
+  const teacher = await Teacher.findOne({
+    where: { id: teacherId },
+  });
+  if (!teacher)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "Invalid teacherId! ",
+    });
+  await teacher.update({
+    isSuspended: false,
+  });
+
+  const mailOptions = {
+    from: "info@moalime.com",
+    to: teacher.email,
+    subject: "moalime: Account Activated",
+    html: `<div style="text-align: right;"> مرحبًا ، <br> 
+    <br>.يسعدنا أن نحيطك علما أن مدير موقع معلمي قام بإعادة تفعيل حسابك 
+    <br> يمكنك استخدام خدمات موقع معلمي الآن
+    <br>.مع كامل إعتذارات فريق موقعي
+    .حظًا سعيدًا <br>
+    ,فريق معلمي
+    </div>`,
+  };
+  const smsOptions = {
+    body: `مرحبًا ،
+    .يسعدنا أن نحيطك علما أن مدير موقع معلمي قام بإعادة تفعيل حسابك 
+    .يمكنك استخدام خدمات موقع معلمي الآن
+   .مع كامل إعتذارات فريق موقعي
+    .حظًا سعيدًا 
+    ,فريق معلمي`,
+    to: teacher.phone,
+  };
+  sendEmail(mailOptions, smsOptions);
+
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم اعادة تفعيل المعلم بنجاح",
+      english: "successfully unSuspended teacher!",
+    },
+  });
+};
+const unSuspendStudent = async (req, res) => {
+  const { studentId } = req.params;
+  console.log("trying to unSuspend student with id = ", studentId);
+  const student = await Student.findOne({
+    where: { id: studentId },
+  });
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الطالب غير موجود",
+      english: "Invalid studentId! ",
+    });
+  await student.update({
+    isSuspended: false,
+  });
+  const mailOptions = {
+    from: "info@moalime.com",
+    to: student.email,
+    subject: "moalime: Account Activated",
+    html: `<div style="text-align: right;"> مرحبًا ، <br> 
+    <br>.يسعدنا أن نحيطك علما أن مدير موقع معلمي قام بإعادة تفعيل حسابك 
+    <br> يمكنك استخدام خدمات موقع معلمي الآن
+    <br>.مع كامل إعتذارات فريق موقعي
+    .حظًا سعيدًا <br>
+    ,فريق معلمي
+    </div>`,
+  };
+  const smsOptions = {
+    body: `مرحبًا ،
+    .يسعدنا أن نحيطك علما أن مدير موقع معلمي قام بإعادة تفعيل حسابك 
+    .يمكنك استخدام خدمات موقع معلمي الآن
+   .مع كامل إعتذارات فريق موقعي
+    .حظًا سعيدًا 
+    ,فريق معلمي`,
+    to: student.phoneNumber,
+  };
+  sendEmail(mailOptions, smsOptions);
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم اعادة تفعيل الطالب بنجاح",
+      english: "successfully unSuspended student!",
+    },
+  });
+};
+const suspendParent = async (req, res) => {
+  const { parentId } = req.params;
+  console.log("trying to suspend parent with id = ", parentId);
+  const parent = await Parent.findOne({
+    where: { id: parentId },
+  });
+  if (!parent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الوالد غير موجودة",
+      english: "Invalid parentId! ",
+    });
+  await parent.update({
+    isSuspended: true,
+  });
+
+  const mailOptions = {
+    from: "info@moalime.com",
+    to: parent.email,
+    subject: "moalime: Account Suspended",
+    html: `<div style="text-align: right;"> مرحبًا ، <br> 
+    <br>.يؤسفنا أن نحيطك علما أن مدير موقع معلمي قام بتوقيف حسابك توقيفا مؤقتا
+    <br>.الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
+    <br>.في الأثناء لا يمكنك استخدام خدمات موقع معلمي
+    .حظًا سعيدًا <br>
+    ,فريق معلمي
+    </div>`,
+  };
+  sendEmail(mailOptions);
+
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم ايقاف الوالد بنجاح",
+      english: "successfully suspended parent!",
+    },
+  });
+};
+const unSuspendParent = async (req, res) => {
+  const { parentId } = req.params;
+  console.log("trying to unSuspend parent with id = ", parentId);
+  const parent = await Parent.findOne({
+    where: { id: parentId },
+  });
+  if (!parent)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الوالد غير موجودة",
+      english: "Invalid parentId! ",
+    });
+  await parent.update({
+    isSuspended: false,
+  });
+  const mailOptions = {
+    from: "info@moalime.com",
+    to: parent.email,
+    subject: "moalime: Account Activated",
+    html: `<div style="text-align: right;"> مرحبًا ، <br> 
+    <br>.يسعدنا أن نحيطك علما أن مدير موقع معلمي قام بإعادة تفعيل حسابك 
+    <br> يمكنك استخدام خدمات موقع معلمي الآن
+    <br>.مع كامل إعتذارات فريق موقعي
+    .حظًا سعيدًا <br>
+    ,فريق معلمي
+    </div>`,
+  };
+  sendEmail(mailOptions);
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم  اعادة تفعيل الوالد بنجاح",
+      english: "successfully unsuspended parent!",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -2753,4 +3005,10 @@ module.exports = {
   deleteCurriculum,
   deleteSubjectCategory,
   deleteSubject,
+  suspendTeacher,
+  suspendStudent,
+  suspendParent,
+  unSuspendTeacher,
+  unSuspendStudent,
+  unSuspendParent,
 };

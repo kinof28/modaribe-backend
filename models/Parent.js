@@ -22,6 +22,10 @@ const Parent = sequelize.define("Parent", {
     type: DataTypes.DOUBLE,
     defaultValue: 0,
   },
+  isSuspended: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 module.exports = Parent;

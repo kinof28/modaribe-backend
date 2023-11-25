@@ -10,14 +10,14 @@ const login = async (req, res) => {
 
   await loginValidation.validate({ email, password });
 
-  const parent = await Parent.findOne({ where: { email } });
+  const parent = await Parent.findOne({ where: { email, isSuspended: false } });
 
   const student = await Student.findOne({
-    where: { email, isRegistered: true },
+    where: { email, isRegistered: true, isSuspended: false },
   });
 
   const teacher = await Teacher.findOne({
-    where: { email, isRegistered: true },
+    where: { email, isRegistered: true, isSuspended: false },
   });
 
   const found = parent || student || teacher;

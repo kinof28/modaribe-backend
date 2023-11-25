@@ -77,6 +77,12 @@ const {
   deleteCurriculum,
   deleteSubjectCategory,
   deleteSubject,
+  suspendTeacher,
+  unSuspendTeacher,
+  suspendStudent,
+  unSuspendStudent,
+  suspendParent,
+  unSuspendParent,
 } = require("../controllers/admin");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const logout = require("../middlewares/logout");
@@ -531,6 +537,45 @@ adminRouter.delete(
   verifyToken,
   checkUserAuth("admin"),
   errorCatcher(deleteSubject)
+);
+
+adminRouter.get(
+  "/suspend/teacher/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(suspendTeacher)
+);
+adminRouter.get(
+  "/unsuspend/teacher/:teacherId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(unSuspendTeacher)
+);
+
+adminRouter.get(
+  "/suspend/student/:studentId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(suspendStudent)
+);
+adminRouter.get(
+  "/unsuspend/student/:studentId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(unSuspendStudent)
+);
+
+adminRouter.get(
+  "/suspend/parent/:parentId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(suspendParent)
+);
+adminRouter.get(
+  "/unsuspend/parent/:parentId",
+  verifyToken,
+  checkUserAuth("admin"),
+  errorCatcher(unSuspendParent)
 );
 
 module.exports = adminRouter;

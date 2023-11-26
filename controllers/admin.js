@@ -1156,7 +1156,17 @@ const getAllWalletsPdf = async (req, res) => {
     },
     order: [["createdAt", "DESC"]],
     include: [{ model: Student }],
-    limit: 20000,
+  });
+  const financialRecords = await FinancialRecord.findAll({
+    include: [
+      { model: Student, attributes: ["name"], required: false },
+      {
+        model: Teacher,
+        attributes: ["firstName", "lastName"],
+        required: false,
+      },
+    ],
+    order: [["createdAt", "DESC"]],
   });
 
   const htmlEN = `
@@ -1200,6 +1210,37 @@ const getAllWalletsPdf = async (req, res) => {
               <td>${wallet.currency}</td>
               <td>${wallet.Student?.name}</td>
               <td>${`${wallet.createdAt}`.substring(0, 24)}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
+      <h1>Payment Operations</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Teacher</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Booking Pay</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${financialRecords
+            .map(
+              (financialRecord) => `
+            <tr>
+              <td>${financialRecord.Student}</td>
+              <td>${
+                financialRecord.Teacher.firstName +
+                " " +
+                financialRecord.Teacher.lastName
+              }</td>
+              <td>${financialRecord.amount}</td>
+              <td>${financialRecord.currency}</td>
+              <td>${`${financialRecord.createdAt}`.substring(0, 24)}</td>
             </tr>
           `
             )
@@ -1257,6 +1298,37 @@ const getAllWalletsPdf = async (req, res) => {
               .join("")}
           </tbody>
         </table>
+        <h1>عمليات الدفع</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>الطالب</th>
+            <th>المعلم</th>
+            <th>المبلغ</th>
+            <th>العملة</th>
+            <th>تاريخ الدفع</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${financialRecords
+            .map(
+              (financialRecord) => `
+            <tr>
+              <td>${financialRecord.Student}</td>
+              <td>${
+                financialRecord.Teacher.firstName +
+                " " +
+                financialRecord.Teacher.lastName
+              }</td>
+              <td>${financialRecord.amount}</td>
+              <td>${financialRecord.currency}</td>
+              <td>${`${financialRecord.createdAt}`.substring(0, 24)}</td>
+            </tr>
+          `
+            )
+            .join("")}
+        </tbody>
+      </table>
       </body>
     </html>
   `;

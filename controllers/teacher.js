@@ -20,6 +20,7 @@ const {
   Session,
   FinancialRecord,
   Rate,
+  CheckoutRequest,
 } = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -1256,6 +1257,33 @@ const endLesson = async (req, res) => {
   });
 };
 
+const requestCheckout = async (req, res) => {
+  const { TeacherId } = req.params;
+  const teacher = await Teacher.findOne({ where: { id: TeacherId } });
+  if (!teacher) {
+    throw serverErrs.BAD_REQUEST({
+      arabic: "المعلم غير موجود",
+      english: "teacher not found",
+    });
+  }
+  const amount = teacher.totalAmount - teacher.dues;
+  const checkoutRequest = await CheckoutRequest.create({
+    TeacherId: TeacherId,
+    value: amount,
+  });
+  await teacher.update({
+    dues: teacher.dues + amount,
+  });
+  res.send({
+    status: 201,
+    data: checkoutRequest,
+    msg: {
+      arabic: "تم إرسال طلب الدفعة بنجاح",
+      english: "successful send request payment",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
@@ -1280,4 +1308,5 @@ module.exports = {
   acceptLesson,
   endLesson,
   getMyStudents,
+  requestCheckout,
 };

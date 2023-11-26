@@ -25,6 +25,7 @@ const {
   acceptLesson,
   endLesson,
   getMyStudents,
+  requestCheckout,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -152,6 +153,13 @@ teacherRouter.patch(
   verifyToken,
   checkUserAuth("teacher"),
   errorCatcher(endLesson)
+);
+
+teacherRouter.get(
+  "/request-checkout/:TeacherId",
+  verifyToken,
+  checkUserAuth("teacher"),
+  errorCatcher(requestCheckout)
 );
 
 module.exports = teacherRouter;

@@ -2,8 +2,14 @@ const CC = require("currency-converter-lt");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const { serverErrs } = require("../middlewares/customError");
-const { Wallet, Student, Session, Teacher, Admin } = require("../models");
-const FinancialRecord = require("../models/financialRecord");
+const {
+  Wallet,
+  Student,
+  Session,
+  Teacher,
+  Admin,
+  FinancialRecord,
+} = require("../models");
 const { Notifications } = require("../firebaseConfig");
 const sendEmail = require("../middlewares/sendEmail");
 
@@ -17,6 +23,8 @@ const charge = async (req, res) => {
     .amount(+price)
     .convert();
 
+  global.price = price;
+  global.currency = currency;
   global.newPrice = newPrice;
 
   let url = "https://checkout.thawani.om/api/v1/checkout/session";
@@ -100,7 +108,7 @@ const checkoutSuccess = async (req, res) => {
     to: student.email,
     subject: "moalime: confirm payment successfully",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
-    تم الدفع بنجاح في حسابك بقيمة${global.newPrice} بالريال العماني<br>
+    تم الدفع بنجاح في حسابك بقيمة${global.price + " " + global.currency}<br>
     شكرا لك على استخدامك منصة معلمي<br>,
     فريق معلمي
     </div> `,
@@ -108,8 +116,8 @@ const checkoutSuccess = async (req, res) => {
   // added by Abdelwahab
   const smsOptions = {
     body: ` عزيزي ${student.name}
-    تم الدفع بنجاح في حسابك بقيمة${global.newPrice} بالريال العماني<br>
-    شكرا لك على استخدامك منصة معلمي<br>,
+    تم الدفع بنجاح في حسابك بقيمة${global.price + " " + global.currency}
+    شكرا لك على استخدامك منصة معلمي,
     فريق معلمي
   `,
     to: student.phoneNumber,
@@ -229,9 +237,10 @@ const booking = async (req, res) => {
     await student.save();
 
     await FinancialRecord.create({
+      StudentId,
+      TeacherId,
       amount: newPrice,
       type: "booking",
-      TeacherId,
     });
 
     const teacher = await Teacher.findOne({
@@ -358,6 +367,7 @@ const bookingSuccess = async (req, res) => {
     amount: session.price,
     type: "booking",
     TeacherId: session.TeacherId,
+    StudentId,
   });
 
   const teacher = await Teacher.findOne({
@@ -397,7 +407,9 @@ const bookingSuccess = async (req, res) => {
     to: student.email,
     subject: "منصة معلمي : تأكيد الدفع بنجاح",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
-    تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${session.price} بالريال العماني<br>
+    تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${
+      session.price + " " + session.currency
+    } <br>
     شكرا لك على استخدامك منصة معلمي<br>,
     فريق معلمي
     </div> `,
@@ -405,7 +417,9 @@ const bookingSuccess = async (req, res) => {
   // added by Abdelwahab
   const smsOptions1 = {
     body: `عزيزي ${student.name},
-    تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${session.price} بالريال العماني
+    تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${
+      session.price + " " + session.currency
+    } 
     شكرا لك على استخدامك منصة معلمي
     فريق معلمي
   `,

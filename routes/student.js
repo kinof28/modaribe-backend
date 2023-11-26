@@ -26,6 +26,7 @@ const {
   startLesson,
   nearestTeachers,
   getMyTeachers,
+  getFinancialRecords,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -107,6 +108,12 @@ studentRouter.get(
   verifyToken,
   checkUserAuth("student"),
   errorCatcher(nearestTeachers)
+);
+studentRouter.get(
+  "/financialRecords/:StudentId",
+  verifyToken,
+  checkUserAuth("student"),
+  errorCatcher(getFinancialRecords)
 );
 
 module.exports = studentRouter;

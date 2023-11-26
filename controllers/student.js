@@ -21,6 +21,7 @@ const {
   Wallet,
   Session,
   CurriculumLevel,
+  FinancialRecord,
 } = require("../models");
 const { validateStudent, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -945,8 +946,14 @@ const nearestTeachers = async (req, res) => {
       english: "student not found",
     });
   const teachers = await Teacher.findAll({
-    include:[{model:TeacherSubject,on:TeacherSubject.TeacherId,include:[{model:Subject,on:Subject.id}]}],
-    attributes:{exclude:["password"]},
+    include: [
+      {
+        model: TeacherSubject,
+        on: TeacherSubject.TeacherId,
+        include: [{ model: Subject, on: Subject.id }],
+      },
+    ],
+    attributes: { exclude: ["password"] },
   });
 
   const lon1 = student.long;
@@ -985,6 +992,40 @@ const nearestTeachers = async (req, res) => {
     },
   });
 };
+const getFinancialRecords = async (req, res) => {
+  const { StudentId } = req.params;
+  const student = await Student.findOne({
+    where: {
+      id: StudentId,
+    },
+  });
+
+  if (!student)
+    throw serverErrs.BAD_REQUEST({
+      arabic: "الطالب غير موجودة",
+      english: "student not found",
+    });
+  const financialRecords = await FinancialRecord.findAll({
+    where: {
+      StudentId: StudentId,
+    },
+    include: [
+      {
+        model: Teacher,
+        attributes: ["firstName", "lastName"],
+        required: false,
+      },
+    ],
+  });
+  res.send({
+    status: 201,
+    data: financialRecords,
+    msg: {
+      arabic: "تم إرجاع سجل الدفوعات الخاصة بالطالب بنجاح",
+      english: "Student financial records returned successfully",
+    },
+  });
+};
 
 module.exports = {
   signUp,
@@ -1011,4 +1052,5 @@ module.exports = {
   startLesson,
   nearestTeachers,
   getMyTeachers,
+  getFinancialRecords,
 };

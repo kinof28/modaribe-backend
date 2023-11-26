@@ -2929,6 +2929,28 @@ const unSuspendParent = async (req, res) => {
   });
 };
 
+const getAllFinancialRecords = async (req, res) => {
+  const financialRecords = await FinancialRecord.findAll({
+    include: [
+      { model: Student, attributes: ["name"], required: false },
+      {
+        model: Teacher,
+        attributes: ["firstName", "lastName"],
+        required: false,
+      },
+    ],
+    order: [["createdAt", "DESC"]],
+  });
+  res.send({
+    status: 200,
+    data: financialRecords,
+    msg: {
+      arabic: "تم جلب التقارير المالية بنجاح",
+      english: "successfully fetched financial records!",
+    },
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -3011,4 +3033,5 @@ module.exports = {
   unSuspendTeacher,
   unSuspendStudent,
   unSuspendParent,
+  getAllFinancialRecords,
 };

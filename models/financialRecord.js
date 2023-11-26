@@ -16,6 +16,11 @@ const FinancialRecord = sequelize.define("FinancialRecord", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  currency: {
+    type: DataTypes.STRING,
+    defaultValue: "OMR",
+    allowNull: false,
+  },
 });
 
 module.exports = FinancialRecord;

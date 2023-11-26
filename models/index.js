@@ -114,6 +114,8 @@ Teacher.hasMany(FinancialRecord);
 FinancialRecord.belongsTo(Teacher);
 
 // Added by Abdelwahab
+Student.hasMany(FinancialRecord);
+FinancialRecord.belongsTo(Student);
 Teacher.hasMany(CheckoutRequest);
 CheckoutRequest.belongsTo(Teacher);
 

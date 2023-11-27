@@ -14,6 +14,7 @@ const {
   verifyCodeForgottenPassword,
   editForgottenPassword,
 } = require("../middlewares/forgetPassword");
+const currencyRouter = require("./currency");
 
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router.use("/teacherSession/:teacherId", getSingleTeacher);
 router.post("/forgetPassword", errorCatcher(forgetPassword));
 router.post("/forgetPassword/code", errorCatcher(verifyCodeForgottenPassword));
 router.post("/forgetPassword/edit", errorCatcher(editForgottenPassword));
-
+// Added by Abdelwahab
+router.use("/currency", currencyRouter);
 module.exports = router;

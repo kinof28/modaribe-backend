@@ -180,9 +180,10 @@ const booking = async (req, res) => {
     .amount(+totalPrice)
     .convert();
 
-  const newPrice = converterPrice;
-  // const newPrice = converterPrice.toFixed(2);
-
+  const newPrice = converterPrice.toFixed(3);
+  if (newPrice < 0.1) {
+    throw serverErrs.BAD_REQUEST("Total price must be greater than 0.1 OMR");
+  }
   global.newPrice = newPrice;
   if (typeOfPayment == "thawani") {
     let url = "https://checkout.thawani.om/api/v1/checkout/session";
@@ -205,6 +206,8 @@ const booking = async (req, res) => {
       session.sessionId = global.session_id;
       await session.save();
     } else {
+      console.log("data.data: ", data.data);
+      console.log("error: ", data.data.error);
       throw serverErrs.BAD_REQUEST("charge didn't succeed");
     }
 

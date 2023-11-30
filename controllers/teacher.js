@@ -541,7 +541,6 @@ const addSubjects = async (req, res) => {
     });
 
   let { remote, f2fStudent, f2fTeacher, subjects } = req.body;
-
   if (typeof subjects === "string") {
     subjects = JSON.parse(subjects);
   }
@@ -554,7 +553,15 @@ const addSubjects = async (req, res) => {
   if (typeof f2fTeacher === "string") {
     f2fTeacher = JSON.parse(f2fTeacher);
   }
-
+  let currency = "OMR";
+  if (remote || f2fStudent || f2fTeacher) {
+    currency = remote.currency || f2fStudent.currency || f2fTeacher.currency;
+  }
+  const conversionRate = await currencyConverter
+    .from(currency)
+    .to("OMR")
+    .amount(1)
+    .convert();
   await TeacherSubject.destroy({
     where: {
       TeacherId: teacher.id,
@@ -582,6 +589,9 @@ const addSubjects = async (req, res) => {
   if (remote) {
     remote["priceAfterDiscount"] =
       +remote.price - +remote.price * (+remote.discount / 100.0);
+    remote["priceAfterDiscount"] = +remote.priceAfterDiscount * conversionRate;
+    remote["price"] = +remote.price * conversionRate;
+    remote.currency = "OMR";
     await RemoteSession.create(remote).then(() =>
       console.log("Teacher remote session has been saved")
     );
@@ -589,6 +599,10 @@ const addSubjects = async (req, res) => {
   if (f2fStudent) {
     f2fStudent["priceAfterDiscount"] =
       +f2fStudent.price - +f2fStudent.price * (+f2fStudent.discount / 100.0);
+    f2fStudent["priceAfterDiscount"] =
+      +f2fStudent.priceAfterDiscount * conversionRate;
+    f2fStudent["price"] = +f2fStudent.price * conversionRate;
+    f2fStudent.currency = "OMR";
     await F2FSessionStd.create(f2fStudent).then(() =>
       console.log("teacher session at home student has been saved")
     );
@@ -596,6 +610,10 @@ const addSubjects = async (req, res) => {
   if (f2fTeacher) {
     f2fTeacher["priceAfterDiscount"] =
       +f2fTeacher.price - +f2fTeacher.price * (+f2fTeacher.discount / 100.0);
+    f2fTeacher["priceAfterDiscount"] =
+      +f2fTeacher.priceAfterDiscount * conversionRate;
+    f2fTeacher["price"] = +f2fTeacher.price * conversionRate;
+    f2fTeacher.currency = "OMR";
     await F2FSessionTeacher.create(f2fTeacher).then(() =>
       console.log("Teacher session at teacher home has been saved")
     );

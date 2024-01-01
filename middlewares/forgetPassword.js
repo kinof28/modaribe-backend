@@ -101,7 +101,7 @@ const editForgottenPassword = async (req, res) => {
     });
 
   const hashedPassword = await hash(password, 12);
-  let token;
+  let token, role, data;
   if (teacher) {
     await teacher.update({ password: hashedPassword });
     token = await generateToken({
@@ -109,6 +109,8 @@ const editForgottenPassword = async (req, res) => {
       name: teacher.name,
       role: "teacher",
     });
+    role = "teacher";
+    data = teacher;
   } else {
     await student.update({ password: hashedPassword });
     token = await generateToken({
@@ -116,6 +118,8 @@ const editForgottenPassword = async (req, res) => {
       name: student.name,
       role: "student",
     });
+    role = "student";
+    data = student;
   }
 
   const mailOptions = {
@@ -137,6 +141,8 @@ const editForgottenPassword = async (req, res) => {
       english: "successful edit password",
     },
     token: token,
+    role: role,
+    data: data,
   });
 };
 

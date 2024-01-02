@@ -785,6 +785,20 @@ const getWaitingTeacher = async (req, res) => {
   const teachers = await Teacher.findAll({
     where: {
       isVerified: false,
+      firstName: { [Op.gt]: "" },
+      lastName: { [Op.gt]: "" },
+      phone: { [Op.gt]: "" },
+      gender: { [Op.gt]: "" },
+      image: { [Op.gt]: "" },
+      dateOfBirth: { [Op.gt]: "" },
+      country: { [Op.gt]: "" },
+      city: { [Op.gt]: "" },
+      favStdGender: { [Op.gt]: "" },
+      favhours: { [Op.gt]: "" },
+      shortHeadlineAr: { [Op.gt]: "" },
+      shortHeadlineEn: { [Op.gt]: "" },
+      descriptionAr: { [Op.gt]: "" },
+      descriptionEn: { [Op.gt]: "" },
     },
   });
   res.send({

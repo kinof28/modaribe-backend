@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
-    "start-2": "cd /./opt/lampp && sudo ./lampp start && cd /./home/abdelwahab/Desktop/server.moalime.com/ && node ./index.js",
+    "start-2": "cd /./opt/lampp && sudo ./lampp start && cd /./home/abdelwahab/Desktop/modaribe-backend/ && node ./index.js",
     "dev": "nodemon ./index.ts",
     "db:seed": "cross-env SEED=true NODE_ENV=development node db/config/build.js"
   },

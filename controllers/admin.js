@@ -154,22 +154,22 @@ const createStudent = async (req, res) => {
     isRegistered: true,
   });
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: email,
-    subject: "moalime: New Student Account",
+    subject: "modaribe: New Student Account",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-       يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع معلمي <br>
+       يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مدربي <br>
     يمكنك تسجيل الدخول الآن باستخدام هذا الإيميل وكلمة السر: ${password} <br>
     .حظًا سعيدًا <br>
-    ,فريق معلمي
+    ,فريق مدربي
     </div>`,
   };
   const smsOptions = {
     body: ` مرحبًا ، 
-    يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع معلمي 
+    يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مدربي 
  يمكنك تسجيل الدخول الآن باستخدام هذا الإيميل وكلمة السر: ${password} 
  .حظًا سعيدًا
-    ,فريق معلمي
+    ,فريق مدربي
     `,
     to: phoneNumber,
   };
@@ -216,22 +216,22 @@ const createTeacher = async (req, res) => {
     isVerified: true,
   });
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: email,
-    subject: "moalime: New Teacher Account",
+    subject: "modaribe: New Teacher Account",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-       يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع معلمي <br>
+       يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مدربي <br>
     يمكنك تسجيل الدخول الآن كمعلم باستخدام هذا الإيميل وكلمة السر: ${password} <br>
     .حظًا سعيدًا <br>
-    ,فريق معلمي
+    ,فريق مدربي
     </div>`,
   };
   const smsOptions = {
     body: ` مرحبًا ، 
-    يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع معلمي 
+    يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مدربي 
  يمكنك تسجيل الدخول الآن كمعلم باستخدام هذا الإيميل وكلمة السر: ${password} 
  .حظًا سعيدًا
-    ,فريق معلمي
+    ,فريق مدربي
     `,
     to: phone,
   };
@@ -729,8 +729,8 @@ const acceptTeacher = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "invalid teacherId!",
+      arabic: "المدرب غير موجود",
+      english: "invalid trainerId!",
     });
 
   await teacher.update({ isVerified: true });
@@ -739,8 +739,8 @@ const acceptTeacher = async (req, res) => {
     status: 201,
     data: teacher,
     msg: {
-      arabic: "تم قبول المعلم بنجاح",
-      english: "teacher has been accepted",
+      arabic: "تم قبول المدرب بنجاح",
+      english: "trainer has been accepted",
     },
   });
 };
@@ -754,8 +754,8 @@ const getAcceptedTeachers = async (req, res) => {
     status: 201,
     data: acceptedTeachers,
     msg: {
-      arabic: "تم ارجاع جميع المعلمين المقبولين",
-      english: "successful get all acceptedTeachers",
+      arabic: "تم ارجاع جميع المدربين المقبولين",
+      english: "successful get all acceptedTrainers",
     },
   });
 };
@@ -766,8 +766,8 @@ const rejectTeacher = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
   await Teacher.destroy({
     where: {
@@ -777,7 +777,7 @@ const rejectTeacher = async (req, res) => {
 
   res.send({
     status: 201,
-    msg: { arabic: "تم رفض المعلم", english: "Rejected teacher successfully" },
+    msg: { arabic: "تم رفض المدرب", english: "Rejected trainer successfully" },
   });
 };
 
@@ -805,8 +805,8 @@ const getWaitingTeacher = async (req, res) => {
     status: 201,
     data: teachers,
     msg: {
-      arabic: "تم ارجاع جميع المعلمين غير المقبولين بعد",
-      english: "successful get all waiting teachers",
+      arabic: "تم ارجاع جميع المدربين غير المقبولين بعد",
+      english: "successful get all waiting trainers",
     },
   });
 };
@@ -1082,8 +1082,8 @@ const getAllTeachers = async (req, res) => {
     status: 201,
     data: teachers,
     msg: {
-      arabic: "تم ارجاع جميع المعلمين",
-      english: "successful get all teachers",
+      arabic: "تم ارجاع جميع المدربين",
+      english: "successful get all trainers",
     },
   });
 };
@@ -1133,7 +1133,7 @@ const getNumbers = async (req, res) => {
     status: 201,
     data: { studentsNumber, teachersNumber, parentsNumber, sessionsNumber },
     msg: {
-      arabic: "تم ارجاع جميع الطلاب والمعلمين والاباء المسجلين",
+      arabic: "تم ارجاع جميع الطلاب والمدربين والاباء المسجلين",
       english: "successful get all numbers",
     },
   });
@@ -1317,7 +1317,7 @@ const getAllWalletsPdf = async (req, res) => {
         <thead>
           <tr>
             <th>الطالب</th>
-            <th>المعلم</th>
+            <th>المدرب</th>
             <th>المبلغ</th>
             <th>العملة</th>
             <th>تاريخ الدفع</th>
@@ -1525,7 +1525,7 @@ const getAllTeachersPDF = async (req, res) => {
         </style>
       </head>
       <body>
-        <h1>All Teachers</h1>
+        <h1>All trainers</h1>
         <table>
           <thead>
             <tr>
@@ -1764,7 +1764,7 @@ const allReports = async (req, res) => {
         </style>
       </head>
       <body>
-        <h1>All Teachers</h1>
+        <h1>All trainers</h1>
         <table>
           <thead>
             <tr>
@@ -2077,8 +2077,8 @@ const deleteTeacher = async (req, res) => {
   res.send({
     status: 201,
     msg: {
-      arabic: "تم حذف المعلم بنجاح",
-      english: "successful delete teacher",
+      arabic: "تم حذف المدرب بنجاح",
+      english: "successful delete trainer",
     },
   });
 };
@@ -2112,8 +2112,8 @@ const signAbout = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   const { firstName, lastName, gender, dateOfBirth, phone, country, city } =
@@ -2173,8 +2173,8 @@ const uploadImage = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   const clearImage = (filePath) => {
@@ -2206,8 +2206,8 @@ const signAdditionalInfo = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   const {
@@ -2295,8 +2295,8 @@ const addSubjects = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   let { remote, f2fStudent, f2fTeacher, subjects } = req.body;
@@ -2415,8 +2415,8 @@ const signResume = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   let { certificates, experiences, educationDegrees } = req.body;
@@ -2497,8 +2497,8 @@ const signAvailability = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   const { timeZone } = req.body;
@@ -2549,8 +2549,8 @@ const addDescription = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
   const { shortHeadlineAr, shortHeadlineEn, descriptionAr, descriptionEn } =
     req.body;
@@ -2579,8 +2579,8 @@ const signVideoLink = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   const { videoLink } = req.body;
@@ -2771,39 +2771,39 @@ const suspendTeacher = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
   await teacher.update({
     isSuspended: true,
   });
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: teacher.email,
-    subject: "moalime: Account Suspended",
+    subject: "modaribe: Account Suspended",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يؤسفنا أن نحيطك علما أن مدير موقع معلمي قام بتوقيف حسابك توقيفا مؤقتا
+    <br>.يؤسفنا أن نحيطك علما أن مدير موقع مدربي قام بتوقيف حسابك توقيفا مؤقتا
     <br>.الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
-    <br>.في الأثناء لا يمكنك استخدام خدمات موقع معلمي
+    <br>.في الأثناء لا يمكنك استخدام خدمات موقع مدربي
     .حظًا سعيدًا <br>
-    ,فريق معلمي
+    ,فريق مدربي
     </div>`,
   };
   const smsOptions = {
     body: `مرحبًا ،
-    .يؤسفنا أن نحيطك علما أن مدير موقع معلمي قام بتوقيف حسابك توقيفا مؤقتا
+    .يؤسفنا أن نحيطك علما أن مدير موقع مدربي قام بتوقيف حسابك توقيفا مؤقتا
     .الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
-    .في الأثناء لا يمكنك استخدام خدمات موقع معلمي
+    .في الأثناء لا يمكنك استخدام خدمات موقع مدربي
     .حظًا سعيدًا 
-    ,فريق معلمي`,
+    ,فريق مدربي`,
     to: teacher.phone,
   };
   sendEmail(mailOptions, smsOptions);
   res.send({
     status: 201,
     msg: {
-      arabic: "تم ايقاف المعلم بنجاح",
-      english: "successfully suspended teacher!",
+      arabic: "تم ايقاف المدرب بنجاح",
+      english: "successfully suspended trainer!",
     },
   });
 };
@@ -2822,24 +2822,24 @@ const suspendStudent = async (req, res) => {
     isSuspended: true,
   });
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: student.email,
-    subject: "moalime: Account Suspended",
+    subject: "modaribe: Account Suspended",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يؤسفنا أن نحيطك علما أن مدير موقع معلمي قام بتوقيف حسابك توقيفا مؤقتا
+    <br>.يؤسفنا أن نحيطك علما أن مدير موقع مدربي قام بتوقيف حسابك توقيفا مؤقتا
     <br>.الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
-    <br>.في الأثناء لا يمكنك استخدام خدمات موقع معلمي
+    <br>.في الأثناء لا يمكنك استخدام خدمات موقع مدربي
     .حظًا سعيدًا <br>
-    ,فريق معلمي
+    ,فريق مدربي
     </div>`,
   };
   const smsOptions = {
     body: `مرحبًا ،
-    .يؤسفنا أن نحيطك علما أن مدير موقع معلمي قام بتوقيف حسابك توقيفا مؤقتا
+    .يؤسفنا أن نحيطك علما أن مدير موقع مدربي قام بتوقيف حسابك توقيفا مؤقتا
     .الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
-    .في الأثناء لا يمكنك استخدام خدمات موقع معلمي
+    .في الأثناء لا يمكنك استخدام خدمات موقع مدربي
     .حظًا سعيدًا 
-    ,فريق معلمي`,
+    ,فريق مدربي`,
     to: student.phoneNumber,
   };
   sendEmail(mailOptions, smsOptions);
@@ -2860,32 +2860,32 @@ const unSuspendTeacher = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
   await teacher.update({
     isSuspended: false,
   });
 
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: teacher.email,
-    subject: "moalime: Account Activated",
+    subject: "modaribe: Account Activated",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يسعدنا أن نحيطك علما أن مدير موقع معلمي قام بإعادة تفعيل حسابك 
-    <br> يمكنك استخدام خدمات موقع معلمي الآن
+    <br>.يسعدنا أن نحيطك علما أن مدير موقع مدربي قام بإعادة تفعيل حسابك 
+    <br> يمكنك استخدام خدمات موقع مدربي الآن
     <br>.مع كامل إعتذارات فريق موقعي
     .حظًا سعيدًا <br>
-    ,فريق معلمي
+    ,فريق مدربي
     </div>`,
   };
   const smsOptions = {
     body: `مرحبًا ،
-    .يسعدنا أن نحيطك علما أن مدير موقع معلمي قام بإعادة تفعيل حسابك 
-    .يمكنك استخدام خدمات موقع معلمي الآن
+    .يسعدنا أن نحيطك علما أن مدير موقع مدربي قام بإعادة تفعيل حسابك 
+    .يمكنك استخدام خدمات موقع مدربي الآن
    .مع كامل إعتذارات فريق موقعي
     .حظًا سعيدًا 
-    ,فريق معلمي`,
+    ,فريق مدربي`,
     to: teacher.phone,
   };
   sendEmail(mailOptions, smsOptions);
@@ -2893,8 +2893,8 @@ const unSuspendTeacher = async (req, res) => {
   res.send({
     status: 201,
     msg: {
-      arabic: "تم اعادة تفعيل المعلم بنجاح",
-      english: "successfully unSuspended teacher!",
+      arabic: "تم اعادة تفعيل المدرب بنجاح",
+      english: "successfully unSuspended trainer!",
     },
   });
 };
@@ -2913,24 +2913,24 @@ const unSuspendStudent = async (req, res) => {
     isSuspended: false,
   });
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: student.email,
-    subject: "moalime: Account Activated",
+    subject: "modaribe: Account Activated",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يسعدنا أن نحيطك علما أن مدير موقع معلمي قام بإعادة تفعيل حسابك 
-    <br> يمكنك استخدام خدمات موقع معلمي الآن
+    <br>.يسعدنا أن نحيطك علما أن مدير موقع مدربي قام بإعادة تفعيل حسابك 
+    <br> يمكنك استخدام خدمات موقع مدربي الآن
     <br>.مع كامل إعتذارات فريق موقعي
     .حظًا سعيدًا <br>
-    ,فريق معلمي
+    ,فريق مدربي
     </div>`,
   };
   const smsOptions = {
     body: `مرحبًا ،
-    .يسعدنا أن نحيطك علما أن مدير موقع معلمي قام بإعادة تفعيل حسابك 
-    .يمكنك استخدام خدمات موقع معلمي الآن
+    .يسعدنا أن نحيطك علما أن مدير موقع مدربي قام بإعادة تفعيل حسابك 
+    .يمكنك استخدام خدمات موقع مدربي الآن
    .مع كامل إعتذارات فريق موقعي
     .حظًا سعيدًا 
-    ,فريق معلمي`,
+    ,فريق مدربي`,
     to: student.phoneNumber,
   };
   sendEmail(mailOptions, smsOptions);
@@ -2958,15 +2958,15 @@ const suspendParent = async (req, res) => {
   });
 
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: parent.email,
-    subject: "moalime: Account Suspended",
+    subject: "modaribe: Account Suspended",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يؤسفنا أن نحيطك علما أن مدير موقع معلمي قام بتوقيف حسابك توقيفا مؤقتا
+    <br>.يؤسفنا أن نحيطك علما أن مدير موقع مدربي قام بتوقيف حسابك توقيفا مؤقتا
     <br>.الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
-    <br>.في الأثناء لا يمكنك استخدام خدمات موقع معلمي
+    <br>.في الأثناء لا يمكنك استخدام خدمات موقع مدربي
     .حظًا سعيدًا <br>
-    ,فريق معلمي
+    ,فريق مدربي
     </div>`,
   };
   sendEmail(mailOptions);
@@ -2994,15 +2994,15 @@ const unSuspendParent = async (req, res) => {
     isSuspended: false,
   });
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: parent.email,
-    subject: "moalime: Account Activated",
+    subject: "modaribe: Account Activated",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يسعدنا أن نحيطك علما أن مدير موقع معلمي قام بإعادة تفعيل حسابك 
-    <br> يمكنك استخدام خدمات موقع معلمي الآن
-    <br>.مع كامل إعتذارات فريق موقعي
+    <br>.يسعدنا أن نحيطك علما أن مدير موقع مدربي قام بإعادة تفعيل حسابك 
+    <br> يمكنك استخدام خدمات موقع مدربي الآن
+    <br>.مع كامل إعتذارات فريق مدربي
     .حظًا سعيدًا <br>
-    ,فريق معلمي
+    ,فريق مدربي
     </div>`,
   };
   sendEmail(mailOptions);

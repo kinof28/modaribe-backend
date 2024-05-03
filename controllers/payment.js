@@ -104,21 +104,21 @@ const checkoutSuccess = async (req, res) => {
   await student.save();
 
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: student.email,
-    subject: "moalime: confirm payment successfully",
+    subject: "modaribe: confirm payment successfully",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
     تم الدفع بنجاح في حسابك بقيمة${global.price + " " + global.currency}<br>
-    شكرا لك على استخدامك منصة معلمي<br>,
-    فريق معلمي
+    شكرا لك على استخدامك منصة مدربي<br>,
+    فريق مدربي
     </div> `,
   };
   // added by Abdelwahab
   const smsOptions = {
     body: ` عزيزي ${student.name}
     تم الدفع بنجاح في حسابك بقيمة${global.price + " " + global.currency}
-    شكرا لك على استخدامك منصة معلمي,
-    فريق معلمي
+    شكرا لك على استخدامك منصة مدربي,
+    فريق مدربي
   `,
     to: student.phoneNumber,
   };
@@ -272,44 +272,44 @@ const booking = async (req, res) => {
     });
 
     const mailOptions = {
-      from: "info@moalime.com",
+      from: "info@modaribe.com",
       to: student.email,
-      subject: "moalime: confirm - session with teacher",
-      // subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
+      subject: "modaribe: confirm - session with trainer",
+      // subject: "منصة مدربي: التأكيد - جلستك مع المعلم",
       html: `<div style="text-align: right;">عزيزي ${student.name},<br>
-      تمت جدولة جلستك مع معلمك ${teacher.firstName} ${teacher.lastName} بنجاح.
+      تمت جدولة جلستك مع مدربك ${teacher.firstName} ${teacher.lastName} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>
       يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
-       .مفيدة لتقدمك الأكاديمي<br>.هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع معلمك وتلقي إرشادات حول أدائك الأكاديمي<br>
+       .مفيدة لتقدمك الأكاديمي<br>.هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع مدربك وتلقي إرشادات حول أدائك الأكاديمي<br>
        ,حظ سعيد<br>
-      فريق معلمي
+      فريق مدربي
       </div> `,
     };
     // added by Abdelwahab
     const smsOptions = {
       body: ` عزيزي ${student.name}
-      تمت جدولة جلستك مع معلمك ${teacher.firstName} ${teacher.lastName} بنجاح.
+      تمت جدولة جلستك مع مدربك ${teacher.firstName} ${teacher.lastName} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.
       . يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون مفيدة لتقدمك الأكاديمي
-       .هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع معلمك وتلقي إرشادات حول أدائك الأكاديمي
+       .هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع مدربك وتلقي إرشادات حول أدائك الأكاديمي
        ,حظ سعيد
-      فريق معلمي
+      فريق مدربي
   `,
       to: student.phoneNumber,
     };
     sendEmail(mailOptions, smsOptions);
 
     const mailOption = {
-      from: "info@moalime.com",
+      from: "info@modaribe.com",
       to: teacher.email,
-      subject: "منصة معلمي: تأكيد الحجز الناجح للجلسة",
+      subject: "منصة مدربي: تأكيد الحجز الناجح للجلسة",
       html: `<div style="text-align: right;">عزيزي ${teacher.firstName} ${teacher.lastName},<br>
       أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.<br>
       يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. <br>
       نحن نقدر فرصة التعلم من 
-      مدرس ذو معرفة وخبرة مثلك.<br>
+      مدرب ذو معرفة وخبرة مثلك.<br>
       حظ سعيد,<br>
-      فريق معلمي
+      فريق مدربي
       </div> `,
     };
 
@@ -318,9 +318,9 @@ const booking = async (req, res) => {
       body: `عزيزي ${teacher.firstName} ${teacher.lastName},
       أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.
       يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. 
-       نحن نقدر فرصة التعلم من مدرس ذو معرفة وخبرة مثلك.
+       نحن نقدر فرصة التعلم من مدرب ذو معرفة وخبرة مثلك.
       حظ سعيد,
-      فريق معلمي
+      فريق مدربي
   `,
       to: teacher.phone,
     };
@@ -406,15 +406,15 @@ const bookingSuccess = async (req, res) => {
   });
 
   const mailOptions1 = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: student.email,
-    subject: "منصة معلمي : تأكيد الدفع بنجاح",
+    subject: "منصة مدربي : تأكيد الدفع بنجاح",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
     تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${
       session.price + " " + session.currency
     } <br>
-    شكرا لك على استخدامك منصة معلمي<br>,
-    فريق معلمي
+    شكرا لك على استخدامك منصة مدربي<br>,
+    فريق مدربي
     </div> `,
   };
   // added by Abdelwahab
@@ -423,53 +423,53 @@ const bookingSuccess = async (req, res) => {
     تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${
       session.price + " " + session.currency
     } 
-    شكرا لك على استخدامك منصة معلمي
-    فريق معلمي
+    شكرا لك على استخدامك منصة مدربي
+    فريق مدربي
   `,
     to: student.phoneNumber,
   };
   sendEmail(mailOptions1, smsOptions1);
 
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: student.email,
-    subject: "moalime: confirm - session with teacher",
-    // subject: "منصة معلمي: التأكيد - جلستك مع المعلم",
+    subject: "modaribe: confirm - session with trainer",
+    // subject: "منصة مدربي: التأكيد - جلستك مع المعلم",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
-      تمت جدولة جلستك مع معلمك ${teacher.firstName} ${teacher.lastName} بنجاح.
+      تمت جدولة جلستك مع مدربك ${teacher.firstName} ${teacher.lastName} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>
       يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
-       .مفيدة لتقدمك الأكاديمي<br>.هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع معلمك وتلقي إرشادات حول أدائك الأكاديمي<br>
+       .مفيدة لتقدمك الأكاديمي<br>.هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع مدربك وتلقي إرشادات حول أدائك الأكاديمي<br>
        ,حظ سعيد<br>
-      فريق معلمي
+      فريق مدربي
       </div> `,
   };
   // added by Abdelwahab
   const smsOptions = {
     body: `عزيزي ${student.name},
-      تمت جدولة جلستك مع معلمك ${teacher.firstName} ${teacher.lastName} بنجاح.
+      تمت جدولة جلستك مع مدربك ${teacher.firstName} ${teacher.lastName} بنجاح.
       ستتم جلستك في ${session.date} وستنعقد ${session.type}.
       يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
        .مفيدة لتقدمك الأكاديمي
-       .هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع معلمك وتلقي إرشادات حول أدائك الأكاديمي
+       .هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع مدربك وتلقي إرشادات حول أدائك الأكاديمي
        ,حظ سعيد
-      فريق معلمي
+      فريق مدربي
   `,
     to: student.phoneNumber,
   };
   sendEmail(mailOptions, smsOptions);
 
   const mailOption = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: teacher.email,
-    subject: "منصة معلمي: تأكيد الحجز الناجح للجلسة",
+    subject: "منصة مدربي: تأكيد الحجز الناجح للجلسة",
     html: `<div style="text-align: right;">عزيزي ${teacher.firstName} ${teacher.lastName},<br>
       أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.<br>
       يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. <br>
       نحن نقدر فرصة التعلم من 
-      مدرس ذو معرفة وخبرة مثلك.<br>
+      مدرب ذو معرفة وخبرة مثلك.<br>
       حظ سعيد,<br>
-      فريق معلمي
+      فريق مدربي
       </div> `,
   };
   // added by Abdelwahab
@@ -478,9 +478,9 @@ const bookingSuccess = async (req, res) => {
       أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.
       يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. 
       نحن نقدر فرصة التعلم من 
-      مدرس ذو معرفة وخبرة مثلك.
+      مدرب ذو معرفة وخبرة مثلك.
       حظ سعيد,
-      فريق معلمي
+      فريق مدربي
   `,
     to: teacher.phone,
   };

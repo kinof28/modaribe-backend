@@ -99,15 +99,15 @@ const signUp = async (req, res) => {
   }
 
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: email,
-    subject: "moalime: verification code",
+    subject: "modaribe: verification code",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا .
     يسعدنا إخبارك بأنه تم إنشاء حسابك <br>
     !للتحقق من حسابك أدخل الرمز من فضلك <br>
     <b> ${code} </b>
     .حظًا سعيدًا <br>
-    ,فريق معلمي
+    ,فريق مدربي
     </div>`,
   };
   // added by Abdelwahab
@@ -118,7 +118,7 @@ const signUp = async (req, res) => {
   !للتحقق من حسابك أدخل الرمز من فضلك 
    ${code} 
   .حظًا سعيدًا 
-  ,فريق معلمي
+  ,فريق مدربي
   `,
     to: phoneNumber,
   };
@@ -215,16 +215,16 @@ const signPassword = async (req, res) => {
   });
 
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: email,
-    subject: "moalime: Account successfully created",
-    // subject: "!منصة معلمي : تم إنشاء الحساب بنجاح",
+    subject: "modaribe: Account successfully created",
+    // subject: "!منصة مدربي : تم إنشاء الحساب بنجاح",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا .
     يسعدنا إخبارك أنه تم إنشاء حسابك بنجاح. <br>
     تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا <br> <br>
     .نتطلع إلى تزويدك بتجربة استثنائية <br>
     ,حظًا سعيدًا <br>
-    فريق معلمي
+    فريق مدربي
     </div>`,
   };
   // added by Abdelwahab
@@ -235,7 +235,7 @@ const signPassword = async (req, res) => {
  تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا
  .نتطلع إلى تزويدك بتجربة استثنائية 
  ,حظًا سعيدًا
-    فريق معلمي
+    فريق مدربي
   `,
     to: student.phoneNumber,
   };
@@ -572,8 +572,8 @@ const getSingleTeacher = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   let currencyConverter = new CC();
@@ -611,7 +611,7 @@ const getSingleTeacher = async (req, res) => {
     data: teacher,
     msg: {
       arabic: "ارجاع بيانات الملعم بنجاح مع تحويل العملة",
-      english: "successful get teacher with converted currency",
+      english: "successful get trainer with converted currency",
     },
   });
 };
@@ -626,7 +626,7 @@ const getStudentCredit = async (req, res) => {
   });
   if (!student)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
+      arabic: "المدرب غير موجود",
       english: "Invalid studentId! ",
     });
   let currencyConverter = new CC();
@@ -698,8 +698,8 @@ const getMyTeachers = async (req, res) => {
     status: 201,
     data: teachers,
     msg: {
-      arabic: "تم ارجاع جميع معلمي التلميذ بنجاح",
-      english: "successful get all student teachers",
+      arabic: "تم ارجاع جميع مدربي التلميذ بنجاح",
+      english: "successful get all student trainers",
     },
   });
 };
@@ -766,8 +766,8 @@ const rateTeacher = async (req, res) => {
 
   if (!session)
     throw serverErrs.BAD_REQUEST({
-      arabic: "لا يوجد أي جلسة مع المعلم ",
-      english: "You don't have any session with the teacher",
+      arabic: "لا يوجد أي جلسة مع المدرب ",
+      english: "You don't have any session with the trainer",
     });
 
   const rateData = await Rate.findOne({
@@ -779,8 +779,8 @@ const rateTeacher = async (req, res) => {
 
   if (rateData)
     throw serverErrs.BAD_REQUEST({
-      arabic: "لقد قمت بتقييم المعلم من قبل",
-      english: "You already Rated the teacher ",
+      arabic: "لقد قمت بتقييم المدرب من قبل",
+      english: "You already Rated the trainer ",
     });
 
   const rate = await Rate.create({
@@ -805,15 +805,15 @@ const rateTeacher = async (req, res) => {
   const ratingFromZeroToFive = Math.round(avgRating);
 
   teacher.rate = ratingFromZeroToFive;
-  console.log("teacher.rate : ", teacher.rate);
+  console.log("trainer.rate : ", teacher.rate);
   await teacher.save();
 
   res.send({
     status: 201,
     data: rate,
     msg: {
-      arabic: "تم تقييم المعلم بنجاح",
-      english: "successful rate teacher",
+      arabic: "تم تقييم المدرب بنجاح",
+      english: "successful rate trainer",
     },
   });
 };
@@ -987,8 +987,8 @@ const nearestTeachers = async (req, res) => {
     status: 201,
     result,
     msg: {
-      arabic: "تم ايجاد المعلمين في مسافة 15 كيلو متر",
-      english: "successful get teachers in 15 kilo meter",
+      arabic: "تم ايجاد المدربين في مسافة 15 كيلو متر",
+      english: "successful get trainers in 15 kilo meter",
     },
   });
 };

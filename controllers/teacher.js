@@ -96,15 +96,15 @@ const signUp = async (req, res) => {
     });
   }
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: email,
-    subject: "moalime: verification code",
+    subject: "modaribe: verification code",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا .
     يسعدنا إخبارك بأنه تم إنشاء حسابك <br>
     !للتحقق من حسابك أدخل الرمز من فضلك <br>
     <b> ${code} </b>
     .حظًا سعيدًا <br>
-    ,فريق معلمي
+    ,فريق مدربي
     </div>`,
   };
   // added by Abdelwahab
@@ -115,7 +115,7 @@ const signUp = async (req, res) => {
     !للتحقق من حسابك أدخل الرمز من فضلك 
      ${code} 
     .حظًا سعيدًا 
-    ,فريق معلمي
+    ,فريق مدربي
     `,
     to: phoneNumber,
   };
@@ -218,15 +218,15 @@ const signPassword = async (req, res) => {
 
   // res.cookie("token", token);
   const mailOptions = {
-    from: "info@moalime.com",
+    from: "info@modaribe.com",
     to: email,
-    subject: "moalime: Account successfully created",
+    subject: "modaribe: Account successfully created",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا .
     يسعدنا إخبارك أنه تم إنشاء حسابك بنجاح. <br>
     تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا <br> <br>
     .نتطلع إلى تزويدك بتجربة استثنائية <br>
     ,حظًا سعيدًا <br>
-    فريق معلمي
+    فريق مدربي
     </div>`,
   };
   // added by Abdelwahab
@@ -237,7 +237,7 @@ const signPassword = async (req, res) => {
  تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا
  .نتطلع إلى تزويدك بتجربة استثنائية 
  ,حظًا سعيدًا
-    فريق معلمي
+    فريق مدربي
   `,
     to: teacher.phone,
   };
@@ -292,8 +292,8 @@ const signAbout = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   if (teacher.id != req.user.userId)
@@ -355,8 +355,8 @@ const signAdditionalInfo = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   if (teacher.id != req.user.userId)
@@ -467,16 +467,16 @@ const getSingleTeacher = async (req, res) => {
 
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   res.send({
     status: 201,
     data: teacher,
     msg: {
-      arabic: "تم إرجاع معلومات المعلم بنجاح",
-      english: "successful get single Teacher",
+      arabic: "تم إرجاع معلومات المدرب بنجاح",
+      english: "successful get single trainer",
     },
   });
 };
@@ -493,8 +493,8 @@ const uploadImage = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   if (teacher.id != req.user.userId)
@@ -530,8 +530,8 @@ const addSubjects = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   if (teacher.id != req.user.userId)
@@ -593,7 +593,7 @@ const addSubjects = async (req, res) => {
     remote["price"] = +remote.price * conversionRate;
     remote.currency = "OMR";
     await RemoteSession.create(remote).then(() =>
-      console.log("Teacher remote session has been saved")
+      console.log("trainer remote session has been saved")
     );
   }
   if (f2fStudent) {
@@ -615,7 +615,7 @@ const addSubjects = async (req, res) => {
     f2fTeacher["price"] = +f2fTeacher.price * conversionRate;
     f2fTeacher.currency = "OMR";
     await F2FSessionTeacher.create(f2fTeacher).then(() =>
-      console.log("Teacher session at teacher home has been saved")
+      console.log("trainer session at trainer home has been saved")
     );
   }
 
@@ -677,8 +677,8 @@ const signAvailability = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   if (teacher.id != req.user.userId)
@@ -735,8 +735,8 @@ const addDescription = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   if (teacher.id != req.user.userId)
@@ -769,8 +769,8 @@ const signResume = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: teacherId } });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   if (teacher.id != req.user.userId)
@@ -858,8 +858,8 @@ const signVideoLink = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "Invalid teacherId! ",
+      arabic: "المدرب غير موجود",
+      english: "Invalid trainerId! ",
     });
 
   if (teacher.id != req.user.userId)
@@ -1074,8 +1074,8 @@ const resetPassword = async (req, res) => {
   });
   if (!teacher)
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "teacher not found",
+      arabic: "المدرب غير موجود",
+      english: "trainer not found",
     });
   const result = await compare(oldPassword, teacher?.password);
   if (!result)
@@ -1090,7 +1090,7 @@ const resetPassword = async (req, res) => {
     data: teacher,
     msg: {
       arabic: "تم تحديث كلمة المرور بنجاح",
-      english: "successful update teacher password",
+      english: "successful update trainer password",
     },
   });
 };
@@ -1136,7 +1136,7 @@ const getMyStudents = async (req, res) => {
     status: 201,
     data: students,
     msg: {
-      arabic: "تم ارجاع جميع تلاميذ المعلم بنجاح",
+      arabic: "تم ارجاع جميع تلاميذ المدرب بنجاح",
       english: "successful get all teacher students",
     },
   });
@@ -1155,8 +1155,8 @@ const getCredit = async (req, res) => {
     status: 201,
     data: { totalAmount: teacher.totalAmount, dues: teacher.dues },
     msg: {
-      arabic: "تم إرجاع مستحقات المعلم بنجاح",
-      english: "successful get all teacher credit & dues",
+      arabic: "تم إرجاع مستحقات المدرب بنجاح",
+      english: "successful get all trainer credit & dues",
     },
   });
 };
@@ -1213,8 +1213,8 @@ const getTeacherRate = async (req, res) => {
     status: 201,
     data: rates,
     msg: {
-      arabic: "تم ارجاع تقييم المعلم بنجاح",
-      english: "successful get teacher rate",
+      arabic: "تم ارجاع تقييم المدرب بنجاح",
+      english: "successful get trainer rate",
     },
   });
 };
@@ -1280,8 +1280,8 @@ const requestCheckout = async (req, res) => {
   const teacher = await Teacher.findOne({ where: { id: TeacherId } });
   if (!teacher) {
     throw serverErrs.BAD_REQUEST({
-      arabic: "المعلم غير موجود",
-      english: "teacher not found",
+      arabic: "المدرب غير موجود",
+      english: "trainer not found",
     });
   }
   const amount = teacher.totalAmount - teacher.dues;

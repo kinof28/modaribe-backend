@@ -1357,7 +1357,7 @@ const getAllWalletsPdf = async (req, res) => {
     .toFile(path.join("invoices", "wallets.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
       const pdf = await fetch(
-        "https://server.moalime.com/invoices/wallets.pdf"
+        "https://server.moalime.com/modaribe/invoices/wallets.pdf"
       );
       const buffer = await pdf.arrayBuffer();
       const fileData = Buffer.from(buffer);
@@ -1466,7 +1466,7 @@ const getAllStudentsPDF = async (req, res) => {
       .toFile(path.join("invoices", "students.pdf"), async (err, response) => {
         if (err) throw serverErrs.BAD_REQUEST("PDF not created");
         const pdf = await fetch(
-          "https://server.moalime.com/invoices/students.pdf"
+          "https://server.moalime.com/modaribe/invoices/students.pdf"
         );
         const buffer = await pdf.arrayBuffer();
         const fileData = Buffer.from(buffer);
@@ -1572,7 +1572,7 @@ const getAllTeachersPDF = async (req, res) => {
     .toFile(path.join("invoices", "teachers.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
       const pdf = await fetch(
-        "https://server.moalime.com/invoices/teachers.pdf"
+        "https://server.moalime.com/modaribe/invoices/teachers.pdf"
       );
       const buffer = await pdf.arrayBuffer();
       const fileData = Buffer.from(buffer);
@@ -1645,7 +1645,7 @@ const getAllParentsPDF = async (req, res) => {
     .toFile(path.join("invoices", "parents.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
       const pdf = await fetch(
-        "https://server.moalime.com/invoices/parents.pdf"
+        "https://server.moalime.com/modaribe/invoices/parents.pdf"
       );
       const buffer = await pdf.arrayBuffer();
       const fileData = Buffer.from(buffer);
@@ -1914,7 +1914,9 @@ const allReports = async (req, res) => {
   // save final combined PDF file
   const mergedPdf = await pdfDoc.save();
   fs.writeFileSync(path.join("invoices", "combined.pdf"), mergedPdf);
-  const pdf4 = await fetch("https://server.moalime.com/invoices/combined.pdf");
+  const pdf4 = await fetch(
+    "https://server.moalime.com/modaribe/invoices/combined.pdf"
+  );
   const buffer = await pdf4.arrayBuffer();
   const fileData = Buffer.from(buffer);
   res.writeHead(200, {

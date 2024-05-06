@@ -154,22 +154,22 @@ const createStudent = async (req, res) => {
     isRegistered: true,
   });
   const mailOptions = {
-    from: "info@modaribe.com",
+    from: "info@muscatdrivingschool.com",
     to: email,
-    subject: "modaribe: New Student Account",
+    subject: "MDS: New Student Account",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-       يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مدربي <br>
+       يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مسقط لتعليم قيادة السيارات <br>
     يمكنك تسجيل الدخول الآن باستخدام هذا الإيميل وكلمة السر: ${password} <br>
     .حظًا سعيدًا <br>
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     </div>`,
   };
   const smsOptions = {
     body: ` مرحبًا ، 
-    يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مدربي 
+    يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مسقط لتعليم قيادة السيارات 
  يمكنك تسجيل الدخول الآن باستخدام هذا الإيميل وكلمة السر: ${password} 
  .حظًا سعيدًا
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     `,
     to: phoneNumber,
   };
@@ -216,22 +216,22 @@ const createTeacher = async (req, res) => {
     isVerified: true,
   });
   const mailOptions = {
-    from: "info@modaribe.com",
+    from: "info@muscatdrivingschool.com",
     to: email,
-    subject: "modaribe: New Teacher Account",
+    subject: "MDS: New Trainer Account",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-       يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مدربي <br>
+       يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مسقط لتعليم قيادة السيارات <br>
     يمكنك تسجيل الدخول الآن كمعلم باستخدام هذا الإيميل وكلمة السر: ${password} <br>
     .حظًا سعيدًا <br>
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     </div>`,
   };
   const smsOptions = {
     body: ` مرحبًا ، 
-    يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مدربي 
+    يسعدنا إخبارك بأنه تم إنشاء حساب لك من طرف مدير موقع مسقط لتعليم قيادة السيارات 
  يمكنك تسجيل الدخول الآن كمعلم باستخدام هذا الإيميل وكلمة السر: ${password} 
  .حظًا سعيدًا
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     `,
     to: phone,
   };
@@ -1357,7 +1357,7 @@ const getAllWalletsPdf = async (req, res) => {
     .toFile(path.join("invoices", "wallets.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
       const pdf = await fetch(
-        "https://server.moalime.com/modaribe/invoices/wallets.pdf"
+        "https://aghati.moalime.com/invoices/wallets.pdf"
       );
       const buffer = await pdf.arrayBuffer();
       const fileData = Buffer.from(buffer);
@@ -1466,7 +1466,7 @@ const getAllStudentsPDF = async (req, res) => {
       .toFile(path.join("invoices", "students.pdf"), async (err, response) => {
         if (err) throw serverErrs.BAD_REQUEST("PDF not created");
         const pdf = await fetch(
-          "https://server.moalime.com/modaribe/invoices/students.pdf"
+          "https://aghati.moalime.com/invoices/students.pdf"
         );
         const buffer = await pdf.arrayBuffer();
         const fileData = Buffer.from(buffer);
@@ -1572,7 +1572,7 @@ const getAllTeachersPDF = async (req, res) => {
     .toFile(path.join("invoices", "teachers.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
       const pdf = await fetch(
-        "https://server.moalime.com/modaribe/invoices/teachers.pdf"
+        "https://aghati.moalime.com/invoices/teachers.pdf"
       );
       const buffer = await pdf.arrayBuffer();
       const fileData = Buffer.from(buffer);
@@ -1645,7 +1645,7 @@ const getAllParentsPDF = async (req, res) => {
     .toFile(path.join("invoices", "parents.pdf"), async (err, response) => {
       if (err) throw serverErrs.BAD_REQUEST("PDF not created");
       const pdf = await fetch(
-        "https://server.moalime.com/modaribe/invoices/parents.pdf"
+        "https://aghati.moalime.com/invoices/parents.pdf"
       );
       const buffer = await pdf.arrayBuffer();
       const fileData = Buffer.from(buffer);
@@ -1914,9 +1914,7 @@ const allReports = async (req, res) => {
   // save final combined PDF file
   const mergedPdf = await pdfDoc.save();
   fs.writeFileSync(path.join("invoices", "combined.pdf"), mergedPdf);
-  const pdf4 = await fetch(
-    "https://server.moalime.com/modaribe/invoices/combined.pdf"
-  );
+  const pdf4 = await fetch("https://aghati.moalime.com/invoices/combined.pdf");
   const buffer = await pdf4.arrayBuffer();
   const fileData = Buffer.from(buffer);
   res.writeHead(200, {
@@ -2780,24 +2778,24 @@ const suspendTeacher = async (req, res) => {
     isSuspended: true,
   });
   const mailOptions = {
-    from: "info@modaribe.com",
+    from: "info@muscatdrivingschool.com",
     to: teacher.email,
-    subject: "modaribe: Account Suspended",
+    subject: "MDS: Account Suspended",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يؤسفنا أن نحيطك علما أن مدير موقع مدربي قام بتوقيف حسابك توقيفا مؤقتا
+    <br>.يؤسفنا أن نحيطك علما أن مدير موقع مسقط لتعليم قيادة السيارات قام بتوقيف حسابك توقيفا مؤقتا
     <br>.الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
-    <br>.في الأثناء لا يمكنك استخدام خدمات موقع مدربي
+    <br>.في الأثناء لا يمكنك استخدام خدمات موقع مسقط لتعليم قيادة السيارات
     .حظًا سعيدًا <br>
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     </div>`,
   };
   const smsOptions = {
     body: `مرحبًا ،
-    .يؤسفنا أن نحيطك علما أن مدير موقع مدربي قام بتوقيف حسابك توقيفا مؤقتا
+    .يؤسفنا أن نحيطك علما أن مدير موقع مسقط لتعليم قيادة السيارات قام بتوقيف حسابك توقيفا مؤقتا
     .الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
-    .في الأثناء لا يمكنك استخدام خدمات موقع مدربي
+    .في الأثناء لا يمكنك استخدام خدمات موقع مسقط لتعليم قيادة السيارات
     .حظًا سعيدًا 
-    ,فريق مدربي`,
+    ,فريق مسقط لتعليم قيادة السيارات`,
     to: teacher.phone,
   };
   sendEmail(mailOptions, smsOptions);
@@ -2824,24 +2822,24 @@ const suspendStudent = async (req, res) => {
     isSuspended: true,
   });
   const mailOptions = {
-    from: "info@modaribe.com",
+    from: "info@muscatdrivingschool.com",
     to: student.email,
-    subject: "modaribe: Account Suspended",
+    subject: "MDS: Account Suspended",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يؤسفنا أن نحيطك علما أن مدير موقع مدربي قام بتوقيف حسابك توقيفا مؤقتا
+    <br>.يؤسفنا أن نحيطك علما أن مدير موقع مسقط لتعليم قيادة السيارات قام بتوقيف حسابك توقيفا مؤقتا
     <br>.الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
-    <br>.في الأثناء لا يمكنك استخدام خدمات موقع مدربي
+    <br>.في الأثناء لا يمكنك استخدام خدمات موقع مسقط لتعليم قيادة السيارات
     .حظًا سعيدًا <br>
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     </div>`,
   };
   const smsOptions = {
     body: `مرحبًا ،
-    .يؤسفنا أن نحيطك علما أن مدير موقع مدربي قام بتوقيف حسابك توقيفا مؤقتا
+    .يؤسفنا أن نحيطك علما أن مدير موقع مسقط لتعليم قيادة السيارات قام بتوقيف حسابك توقيفا مؤقتا
     .الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
-    .في الأثناء لا يمكنك استخدام خدمات موقع مدربي
+    .في الأثناء لا يمكنك استخدام خدمات موقع مسقط لتعليم قيادة السيارات
     .حظًا سعيدًا 
-    ,فريق مدربي`,
+    ,فريق مسقط لتعليم قيادة السيارات`,
     to: student.phoneNumber,
   };
   sendEmail(mailOptions, smsOptions);
@@ -2870,24 +2868,24 @@ const unSuspendTeacher = async (req, res) => {
   });
 
   const mailOptions = {
-    from: "info@modaribe.com",
+    from: "info@muscatdrivingschool.com",
     to: teacher.email,
-    subject: "modaribe: Account Activated",
+    subject: "MDS: Account Activated",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يسعدنا أن نحيطك علما أن مدير موقع مدربي قام بإعادة تفعيل حسابك 
-    <br> يمكنك استخدام خدمات موقع مدربي الآن
+    <br>.يسعدنا أن نحيطك علما أن مدير موقع مسقط لتعليم قيادة السيارات قام بإعادة تفعيل حسابك 
+    <br> يمكنك استخدام خدمات موقع مسقط لتعليم قيادة السيارات الآن
     <br>.مع كامل إعتذارات فريق موقعي
     .حظًا سعيدًا <br>
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     </div>`,
   };
   const smsOptions = {
     body: `مرحبًا ،
-    .يسعدنا أن نحيطك علما أن مدير موقع مدربي قام بإعادة تفعيل حسابك 
-    .يمكنك استخدام خدمات موقع مدربي الآن
+    .يسعدنا أن نحيطك علما أن مدير موقع مسقط لتعليم قيادة السيارات قام بإعادة تفعيل حسابك 
+    .يمكنك استخدام خدمات موقع مسقط لتعليم قيادة السيارات الآن
    .مع كامل إعتذارات فريق موقعي
     .حظًا سعيدًا 
-    ,فريق مدربي`,
+    ,فريق مسقط لتعليم قيادة السيارات`,
     to: teacher.phone,
   };
   sendEmail(mailOptions, smsOptions);
@@ -2915,24 +2913,24 @@ const unSuspendStudent = async (req, res) => {
     isSuspended: false,
   });
   const mailOptions = {
-    from: "info@modaribe.com",
+    from: "info@muscatdrivingschool.com",
     to: student.email,
-    subject: "modaribe: Account Activated",
+    subject: "MDS: Account Activated",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يسعدنا أن نحيطك علما أن مدير موقع مدربي قام بإعادة تفعيل حسابك 
-    <br> يمكنك استخدام خدمات موقع مدربي الآن
+    <br>.يسعدنا أن نحيطك علما أن مدير موقع مسقط لتعليم قيادة السيارات قام بإعادة تفعيل حسابك 
+    <br> يمكنك استخدام خدمات موقع مسقط لتعليم قيادة السيارات الآن
     <br>.مع كامل إعتذارات فريق موقعي
     .حظًا سعيدًا <br>
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     </div>`,
   };
   const smsOptions = {
     body: `مرحبًا ،
-    .يسعدنا أن نحيطك علما أن مدير موقع مدربي قام بإعادة تفعيل حسابك 
-    .يمكنك استخدام خدمات موقع مدربي الآن
+    .يسعدنا أن نحيطك علما أن مدير موقع مسقط لتعليم قيادة السيارات قام بإعادة تفعيل حسابك 
+    .يمكنك استخدام خدمات موقع مسقط لتعليم قيادة السيارات الآن
    .مع كامل إعتذارات فريق موقعي
     .حظًا سعيدًا 
-    ,فريق مدربي`,
+    ,فريق مسقط لتعليم قيادة السيارات`,
     to: student.phoneNumber,
   };
   sendEmail(mailOptions, smsOptions);
@@ -2960,15 +2958,15 @@ const suspendParent = async (req, res) => {
   });
 
   const mailOptions = {
-    from: "info@modaribe.com",
+    from: "info@muscatdrivingschool.com",
     to: parent.email,
-    subject: "modaribe: Account Suspended",
+    subject: "MDS: Account Suspended",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يؤسفنا أن نحيطك علما أن مدير موقع مدربي قام بتوقيف حسابك توقيفا مؤقتا
+    <br>.يؤسفنا أن نحيطك علما أن مدير موقع مسقط لتعليم قيادة السيارات قام بتوقيف حسابك توقيفا مؤقتا
     <br>.الرجاء التواصل مع الإدارة لحل المشكلة في القريب العاجل
-    <br>.في الأثناء لا يمكنك استخدام خدمات موقع مدربي
+    <br>.في الأثناء لا يمكنك استخدام خدمات موقع مسقط لتعليم قيادة السيارات
     .حظًا سعيدًا <br>
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     </div>`,
   };
   sendEmail(mailOptions);
@@ -2996,15 +2994,15 @@ const unSuspendParent = async (req, res) => {
     isSuspended: false,
   });
   const mailOptions = {
-    from: "info@modaribe.com",
+    from: "info@muscatdrivingschool.com",
     to: parent.email,
-    subject: "modaribe: Account Activated",
+    subject: "MDS: Account Activated",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
-    <br>.يسعدنا أن نحيطك علما أن مدير موقع مدربي قام بإعادة تفعيل حسابك 
-    <br> يمكنك استخدام خدمات موقع مدربي الآن
-    <br>.مع كامل إعتذارات فريق مدربي
+    <br>.يسعدنا أن نحيطك علما أن مدير موقع مسقط لتعليم قيادة السيارات قام بإعادة تفعيل حسابك 
+    <br> يمكنك استخدام خدمات موقع مسقط لتعليم قيادة السيارات الآن
+    <br>.مع كامل إعتذارات فريق مسقط لتعليم قيادة السيارات
     .حظًا سعيدًا <br>
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     </div>`,
   };
   sendEmail(mailOptions);

@@ -99,15 +99,15 @@ const signUp = async (req, res) => {
   }
 
   const mailOptions = {
-    from: "info@modaribe.com",
+    from: "info@muscatdrivingschool.com",
     to: email,
-    subject: "modaribe: verification code",
+    subject: "MDS: verification code",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا .
     يسعدنا إخبارك بأنه تم إنشاء حسابك <br>
     !للتحقق من حسابك أدخل الرمز من فضلك <br>
     <b> ${code} </b>
     .حظًا سعيدًا <br>
-    ,فريق مدربي
+    ,فريق مسقط لتعليم قيادة السيارات
     </div>`,
   };
   // added by Abdelwahab
@@ -118,7 +118,7 @@ const signUp = async (req, res) => {
   !للتحقق من حسابك أدخل الرمز من فضلك 
    ${code} 
   .حظًا سعيدًا 
-  ,فريق مدربي
+  ,فريق مسقط لتعليم قيادة السيارات
   `,
     to: phoneNumber,
   };
@@ -215,16 +215,16 @@ const signPassword = async (req, res) => {
   });
 
   const mailOptions = {
-    from: "info@modaribe.com",
+    from: "info@muscatdrivingschool.com",
     to: email,
-    subject: "modaribe: Account successfully created",
-    // subject: "!منصة مدربي : تم إنشاء الحساب بنجاح",
+    subject: "MDS: Account successfully created",
+    // subject: "!منصة مسقط لتعليم قيادة السيارات : تم إنشاء الحساب بنجاح",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا .
     يسعدنا إخبارك أنه تم إنشاء حسابك بنجاح. <br>
     تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا <br> <br>
     .نتطلع إلى تزويدك بتجربة استثنائية <br>
     ,حظًا سعيدًا <br>
-    فريق مدربي
+    فريق مسقط لتعليم قيادة السيارات
     </div>`,
   };
   // added by Abdelwahab
@@ -235,7 +235,7 @@ const signPassword = async (req, res) => {
  تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا
  .نتطلع إلى تزويدك بتجربة استثنائية 
  ,حظًا سعيدًا
-    فريق مدربي
+    فريق مسقط لتعليم قيادة السيارات
   `,
     to: student.phoneNumber,
   };

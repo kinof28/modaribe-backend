@@ -34,7 +34,8 @@ const TeacherSubject = require("../models/TeacherSubject");
 const { Op } = require("sequelize");
 const { db } = require("../firebaseConfig");
 const CC = require("currency-converter-lt");
-
+const dotenv = require("dotenv");
+dotenv.config();
 let currencyConverter = new CC();
 
 const signUp = async (req, res) => {
@@ -96,7 +97,7 @@ const signUp = async (req, res) => {
     });
   }
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: email,
     subject: "MDS: verification code",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا .
@@ -218,7 +219,7 @@ const signPassword = async (req, res) => {
 
   // res.cookie("token", token);
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: email,
     subject: "MDS: Account successfully created",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا .

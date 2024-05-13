@@ -48,6 +48,8 @@ const TeacherSubject = require("../models/TeacherSubject");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
+const dotenv = require("dotenv");
+dotenv.config();
 const signUp = async (req, res) => {
   const { name, email, password } = req.body;
   await validateAdminSignUp.validate({ name, email, password });
@@ -154,7 +156,7 @@ const createStudent = async (req, res) => {
     isRegistered: true,
   });
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: email,
     subject: "MDS: New Student Account",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
@@ -216,7 +218,7 @@ const createTeacher = async (req, res) => {
     isVerified: true,
   });
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: email,
     subject: "MDS: New Trainer Account",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
@@ -2778,7 +2780,7 @@ const suspendTeacher = async (req, res) => {
     isSuspended: true,
   });
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: teacher.email,
     subject: "MDS: Account Suspended",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
@@ -2822,7 +2824,7 @@ const suspendStudent = async (req, res) => {
     isSuspended: true,
   });
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: student.email,
     subject: "MDS: Account Suspended",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
@@ -2868,7 +2870,7 @@ const unSuspendTeacher = async (req, res) => {
   });
 
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: teacher.email,
     subject: "MDS: Account Activated",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
@@ -2913,7 +2915,7 @@ const unSuspendStudent = async (req, res) => {
     isSuspended: false,
   });
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: student.email,
     subject: "MDS: Account Activated",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
@@ -2958,7 +2960,7 @@ const suspendParent = async (req, res) => {
   });
 
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: parent.email,
     subject: "MDS: Account Suspended",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 
@@ -2994,7 +2996,7 @@ const unSuspendParent = async (req, res) => {
     isSuspended: false,
   });
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: parent.email,
     subject: "MDS: Account Activated",
     html: `<div style="text-align: right;"> مرحبًا ، <br> 

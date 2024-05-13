@@ -13,6 +13,8 @@ const {
 const { Notifications } = require("../firebaseConfig");
 const sendEmail = require("../middlewares/sendEmail");
 
+const dotenv = require("dotenv");
+dotenv.config();
 const charge = async (req, res) => {
   const { StudentId, price, currency } = req.body;
   let currencyConverter = new CC();
@@ -104,7 +106,7 @@ const checkoutSuccess = async (req, res) => {
   await student.save();
 
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: student.email,
     subject: "MDS: confirm payment successfully",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
@@ -272,7 +274,7 @@ const booking = async (req, res) => {
     });
 
     const mailOptions = {
-      from: "info@muscatdrivingschool.com",
+      from: process.env.APP_EMAIL,
       to: student.email,
       subject: "MDS: confirm - session with trainer",
       // subject: "منصة مسقط لتعليم قيادة السيارات: التأكيد - جلستك مع المعلم",
@@ -300,7 +302,7 @@ const booking = async (req, res) => {
     sendEmail(mailOptions, smsOptions);
 
     const mailOption = {
-      from: "info@muscatdrivingschool.com",
+      from: process.env.APP_EMAIL,
       to: teacher.email,
       subject: "منصة مسقط لتعليم قيادة السيارات: تأكيد الحجز الناجح للجلسة",
       html: `<div style="text-align: right;">عزيزي ${teacher.firstName} ${teacher.lastName},<br>
@@ -406,7 +408,7 @@ const bookingSuccess = async (req, res) => {
   });
 
   const mailOptions1 = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: student.email,
     subject: "منصة مسقط لتعليم قيادة السيارات : تأكيد الدفع بنجاح",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
@@ -431,7 +433,7 @@ const bookingSuccess = async (req, res) => {
   sendEmail(mailOptions1, smsOptions1);
 
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: student.email,
     subject: "MDS: confirm - session with trainer",
     // subject: "منصة مسقط لتعليم قيادة السيارات: التأكيد - جلستك مع المعلم",
@@ -460,7 +462,7 @@ const bookingSuccess = async (req, res) => {
   sendEmail(mailOptions, smsOptions);
 
   const mailOption = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: teacher.email,
     subject: "منصة مسقط لتعليم قيادة السيارات: تأكيد الحجز الناجح للجلسة",
     html: `<div style="text-align: right;">عزيزي ${teacher.firstName} ${teacher.lastName},<br>

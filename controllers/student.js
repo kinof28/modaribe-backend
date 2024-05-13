@@ -36,6 +36,8 @@ const TeacherSubject = require("../models/TeacherSubject");
 const Rate = require("../models/Rate");
 const { Op } = require("sequelize");
 const { Sequelize } = require("sequelize");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const signUp = async (req, res) => {
   // edited by Abdelwahab
@@ -99,7 +101,7 @@ const signUp = async (req, res) => {
   }
 
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: email,
     subject: "MDS: verification code",
     html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا .
@@ -215,7 +217,7 @@ const signPassword = async (req, res) => {
   });
 
   const mailOptions = {
-    from: "info@muscatdrivingschool.com",
+    from: process.env.APP_EMAIL,
     to: email,
     subject: "MDS: Account successfully created",
     // subject: "!منصة مسقط لتعليم قيادة السيارات : تم إنشاء الحساب بنجاح",

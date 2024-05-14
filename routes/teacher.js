@@ -26,6 +26,7 @@ const {
   endLesson,
   getMyStudents,
   requestCheckout,
+  getProfitRatio,
 } = require("../controllers/teacher");
 const errorCatcher = require("../middlewares/errorCatcher");
 const verifyToken = require("../middlewares/verifyToken");
@@ -161,5 +162,6 @@ teacherRouter.get(
   checkUserAuth("teacher"),
   errorCatcher(requestCheckout)
 );
+teacherRouter.get("/profit-ratio", errorCatcher(getProfitRatio));
 
 module.exports = teacherRouter;

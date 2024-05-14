@@ -21,6 +21,7 @@ const {
   FinancialRecord,
   Rate,
   CheckoutRequest,
+  Admin,
 } = require("../models");
 const { validateTeacher, loginValidation } = require("../validation");
 const { serverErrs } = require("../middlewares/customError");
@@ -1302,6 +1303,13 @@ const requestCheckout = async (req, res) => {
     },
   });
 };
+const getProfitRatio = async (req, res) => {
+  const admin = await Admin.findOne();
+  res.send({
+    status: 200,
+    profitRatio: admin.profitRatio,
+  });
+};
 
 module.exports = {
   signUp,
@@ -1328,4 +1336,5 @@ module.exports = {
   endLesson,
   getMyStudents,
   requestCheckout,
+  getProfitRatio,
 };

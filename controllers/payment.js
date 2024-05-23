@@ -262,11 +262,7 @@ const booking = async (req, res) => {
       },
     });
 
-    const admin = await Admin.findOne({
-      where: {
-        id: 1,
-      },
-    });
+    const admin = await Admin.findOne();
     discount = 1 - +admin.profitRatio / 100.0;
     teacher.totalAmount += +newPrice * discount;
     teacher.bookingNumbers += 1;
@@ -389,11 +385,7 @@ const bookingSuccess = async (req, res) => {
     },
   });
 
-  const admin = await Admin.findOne({
-    where: {
-      id: 1,
-    },
-  });
+  const admin = await Admin.findOne();
   discount = 1 - +admin.profitRatio / 100.0;
 
   teacher.totalAmount += +session.price * discount;

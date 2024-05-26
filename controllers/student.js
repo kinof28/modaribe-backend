@@ -36,6 +36,8 @@ const TeacherSubject = require("../models/TeacherSubject");
 const Rate = require("../models/Rate");
 const { Op } = require("sequelize");
 const { Sequelize } = require("sequelize");
+const { db } = require("../firebaseConfig");
+
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -1028,6 +1030,26 @@ const getFinancialRecords = async (req, res) => {
     },
   });
 };
+const updateNotification = async (req, res) => {
+  const { StudentId } = req.params;
+  const notificationsRef = db.collection("Notifications");
+  const query = notificationsRef.where("StudentId", "==", StudentId);
+
+  query.get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      const notificationRef = notificationsRef.doc(doc.id);
+      notificationRef.update({ seen: true });
+    });
+  });
+
+  res.send({
+    status: 201,
+    msg: {
+      arabic: "تم رؤية جميع الإشعارات ",
+      english: "successful seen for all Notification",
+    },
+  });
+};
 
 module.exports = {
   signUp,
@@ -1055,4 +1077,5 @@ module.exports = {
   nearestTeachers,
   getMyTeachers,
   getFinancialRecords,
+  updateNotification,
 };

@@ -27,6 +27,7 @@ const {
   nearestTeachers,
   getMyTeachers,
   getFinancialRecords,
+  updateNotification,
 } = require("../controllers/student");
 const checkUserAuth = require("../middlewares/checkUserAuth");
 const verifyToken = require("../middlewares/verifyToken");
@@ -114,6 +115,12 @@ studentRouter.get(
   verifyToken,
   checkUserAuth("student"),
   errorCatcher(getFinancialRecords)
+);
+studentRouter.put(
+  "/updateNotification/:StudentId",
+  verifyToken,
+  checkUserAuth("student"),
+  errorCatcher(updateNotification)
 );
 
 module.exports = studentRouter;

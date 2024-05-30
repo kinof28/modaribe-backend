@@ -950,6 +950,7 @@ const nearestTeachers = async (req, res) => {
       english: "student not found",
     });
   const teachers = await Teacher.findAll({
+    where: { isVerified: 1, isRegistered: true },
     include: [
       {
         model: TeacherSubject,

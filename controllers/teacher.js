@@ -557,7 +557,7 @@ const addSubjects = async (req, res) => {
   }
   let currency = "OMR";
   if (remote || f2fStudent || f2fTeacher) {
-    currency = remote.currency || f2fStudent.currency || f2fTeacher.currency;
+    currency = remote?.currency || f2fStudent?.currency || f2fTeacher?.currency;
   }
   const conversionRate = await currencyConverter
     .from(currency)

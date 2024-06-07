@@ -413,7 +413,7 @@ const bookingSuccess = async (req, res) => {
     subject: "منصة مسقط لتعليم قيادة السيارات : تأكيد الدفع بنجاح",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
     تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${
-      session.price + " " + session.currency
+      global.price + " " + session.currency
     } <br>
     شكرا لك على استخدامك منصة مسقط لتعليم قيادة السيارات<br>,
     فريق مسقط لتعليم قيادة السيارات
@@ -423,7 +423,7 @@ const bookingSuccess = async (req, res) => {
   const smsOptions1 = {
     body: `عزيزي ${student.name},
     تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${
-      session.price + " " + session.currency
+      global.price + " " + session.currency
     } 
     شكرا لك على استخدامك منصة مسقط لتعليم قيادة السيارات
     فريق مسقط لتعليم قيادة السيارات

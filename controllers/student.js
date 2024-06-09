@@ -39,11 +39,16 @@ const { Sequelize } = require("sequelize");
 const { db } = require("../firebaseConfig");
 
 const dotenv = require("dotenv");
+const {
+  generateConfirmEmailBody,
+  generateWelcomeEmailBody,
+} = require("../utils/EmailBodyGenerator");
+const { generateWelcomeSMSBody } = require("../utils/SMSBodyGenerator");
 dotenv.config();
 
 const signUp = async (req, res) => {
   // edited by Abdelwahab
-  const { email, phoneNumber, name, location } = req.body;
+  const { email, phoneNumber, name, location, language } = req.body;
   await validateStudent.validate({ email, name, location });
 
   const teacher = await Teacher.findOne({
@@ -102,28 +107,10 @@ const signUp = async (req, res) => {
     await newStudent.save();
   }
 
-  const mailOptions = {
-    from: process.env.APP_EMAIL,
-    to: email,
-    subject: "MDS: verification code",
-    html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا .
-    يسعدنا إخبارك بأنه تم إنشاء حسابك <br>
-    !للتحقق من حسابك أدخل الرمز من فضلك <br>
-    <b> ${code} </b>
-    .حظًا سعيدًا <br>
-    ,فريق مسقط لتعليم قيادة السيارات
-    </div>`,
-  };
+  const mailOptions = generateConfirmEmailBody(code, language, email);
   // added by Abdelwahab
   const smsOptions = {
-    body: ` مرحبًا ، 
-    شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا 
-  يسعدنا إخبارك بأنه تم إنشاء حسابك 
-  !للتحقق من حسابك أدخل الرمز من فضلك 
-   ${code} 
-  .حظًا سعيدًا 
-  ,فريق مسقط لتعليم قيادة السيارات
-  `,
+    body: generateConfirmEmailSMSBody(language, code),
     to: phoneNumber,
   };
   sendEmail(mailOptions, smsOptions);
@@ -192,7 +179,7 @@ const verifyCode = async (req, res) => {
 };
 
 const signPassword = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, language } = req.body;
 
   let student = await Student.findOne({
     where: {
@@ -218,29 +205,10 @@ const signPassword = async (req, res) => {
     role: "student",
   });
 
-  const mailOptions = {
-    from: process.env.APP_EMAIL,
-    to: email,
-    subject: "MDS: Account successfully created",
-    // subject: "!منصة مسقط لتعليم قيادة السيارات : تم إنشاء الحساب بنجاح",
-    html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا .
-    يسعدنا إخبارك أنه تم إنشاء حسابك بنجاح. <br>
-    تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا <br> <br>
-    .نتطلع إلى تزويدك بتجربة استثنائية <br>
-    ,حظًا سعيدًا <br>
-    فريق مسقط لتعليم قيادة السيارات
-    </div>`,
-  };
+  const mailOptions = generateWelcomeEmailBody(language, student.name, email);
   // added by Abdelwahab
   const smsOptions = {
-    body: ` مرحبًا ، 
-    شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا 
- يسعدنا إخبارك أنه تم إنشاء حسابك بنجاح.
- تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا
- .نتطلع إلى تزويدك بتجربة استثنائية 
- ,حظًا سعيدًا
-    فريق مسقط لتعليم قيادة السيارات
-  `,
+    body: generateWelcomeSMSBody(language, student.name),
     to: student.phoneNumber,
   };
   sendEmail(mailOptions, smsOptions);

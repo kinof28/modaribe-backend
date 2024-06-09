@@ -36,12 +36,20 @@ const { Op } = require("sequelize");
 const { db } = require("../firebaseConfig");
 const CC = require("currency-converter-lt");
 const dotenv = require("dotenv");
+const {
+  generateConfirmEmailBody,
+  generateWelcomeEmailBody,
+} = require("../utils/EmailBodyGenerator");
+const {
+  generateConfirmEmailSMSBody,
+  generateWelcomeSMSBody,
+} = require("../utils/SMSBodyGenerator");
 dotenv.config();
 let currencyConverter = new CC();
 
 const signUp = async (req, res) => {
   // Edited by Abdelwahab
-  const { email, phoneNumber } = req.body;
+  const { email, phoneNumber, language } = req.body;
   await validateTeacher.validate({ email });
 
   const teacher = await Teacher.findOne({
@@ -97,28 +105,11 @@ const signUp = async (req, res) => {
       registerCode: code,
     });
   }
-  const mailOptions = {
-    from: process.env.APP_EMAIL,
-    to: email,
-    subject: "MDS: verification code",
-    html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا .
-    يسعدنا إخبارك بأنه تم إنشاء حسابك <br>
-    !للتحقق من حسابك أدخل الرمز من فضلك <br>
-    <b> ${code} </b>
-    .حظًا سعيدًا <br>
-    ,فريق مسقط لتعليم قيادة السيارات
-    </div>`,
-  };
+  const mailOptions = generateConfirmEmailBody(code, language, email);
+
   // added by Abdelwahab
   const smsOptions = {
-    body: ` مرحبًا ، 
-      شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا 
-    يسعدنا إخبارك بأنه تم إنشاء حسابك 
-    !للتحقق من حسابك أدخل الرمز من فضلك 
-     ${code} 
-    .حظًا سعيدًا 
-    ,فريق مسقط لتعليم قيادة السيارات
-    `,
+    body: generateConfirmEmailSMSBody(language, code),
     to: phoneNumber,
   };
   sendEmail(mailOptions, smsOptions);
@@ -218,29 +209,17 @@ const signPassword = async (req, res) => {
     role: "teacher",
   });
 
-  // res.cookie("token", token);
-  const mailOptions = {
-    from: process.env.APP_EMAIL,
-    to: email,
-    subject: "MDS: Account successfully created",
-    html: `<div style="text-align: right;"> مرحبًا ، <br> شكرًا جزيلاً لك على تخصيص بعض الوقت للانضمام إلينا .
-    يسعدنا إخبارك أنه تم إنشاء حسابك بنجاح. <br>
-    تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا <br> <br>
-    .نتطلع إلى تزويدك بتجربة استثنائية <br>
-    ,حظًا سعيدًا <br>
-    فريق مسقط لتعليم قيادة السيارات
-    </div>`,
-  };
+  const mailOptions = generateWelcomeEmailBody(
+    language,
+    teacher.firstName + " " + teacher.lastName,
+    email
+  );
   // added by Abdelwahab
   const smsOptions = {
-    body: ` مرحبًا ، 
-    شكرًا جزيلاً لك على الوقت الذي استغرقته للانضمام إلينا 
- يسعدنا إخبارك أنه تم إنشاء حسابك بنجاح.
- تهانينا على اتخاذ الخطوة الأولى نحو تجربة موقعنا
- .نتطلع إلى تزويدك بتجربة استثنائية 
- ,حظًا سعيدًا
-    فريق مسقط لتعليم قيادة السيارات
-  `,
+    body: generateWelcomeSMSBody(
+      language,
+      teacher.firstName + " " + teacher.lastName
+    ),
     to: teacher.phone,
   };
   sendEmail(mailOptions, smsOptions);

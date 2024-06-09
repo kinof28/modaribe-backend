@@ -43,7 +43,10 @@ const {
   generateConfirmEmailBody,
   generateWelcomeEmailBody,
 } = require("../utils/EmailBodyGenerator");
-const { generateWelcomeSMSBody } = require("../utils/SMSBodyGenerator");
+const {
+  generateConfirmEmailSMSBody,
+  generateWelcomeSMSBody,
+} = require("../utils/SMSBodyGenerator");
 dotenv.config();
 
 const signUp = async (req, res) => {

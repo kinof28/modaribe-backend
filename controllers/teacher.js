@@ -183,7 +183,7 @@ const verifyCode = async (req, res) => {
 };
 
 const signPassword = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, language } = req.body;
 
   let teacher = await Teacher.findOne({
     where: {

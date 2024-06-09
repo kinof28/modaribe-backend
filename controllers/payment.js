@@ -14,6 +14,12 @@ const { Notifications } = require("../firebaseConfig");
 const sendEmail = require("../middlewares/sendEmail");
 
 const dotenv = require("dotenv");
+const {
+  generateChargeConfirmationEmail,
+} = require("../utils/EmailBodyGenerator");
+const {
+  generateChargeConfirmationSMSBody,
+} = require("../utils/SMSBodyGenerator");
 dotenv.config();
 const charge = async (req, res) => {
   const { StudentId, price, currency } = req.body;
@@ -71,6 +77,8 @@ const charge = async (req, res) => {
 };
 
 const checkoutSuccess = async (req, res) => {
+  const { language } = req.body;
+
   let options = {
     method: "GET",
     headers: {
@@ -109,23 +117,21 @@ const checkoutSuccess = async (req, res) => {
   student.wallet += +global.newPrice;
   await student.save();
 
-  const mailOptions = {
-    from: process.env.APP_EMAIL,
-    to: student.email,
-    subject: "MDS: confirm payment successfully",
-    html: `<div style="text-align: right;">عزيزي ${student.name},<br>
-    تم الدفع بنجاح في حسابك بقيمة${global.price + " " + global.currency}<br>
-    شكرا لك على استخدامك منصة مسقط لتعليم قيادة السيارات<br>,
-    فريق مسقط لتعليم قيادة السيارات
-    </div> `,
-  };
+  const mailOptions = generateChargeConfirmationEmail(
+    language,
+    student.email,
+    student.name,
+    global.price,
+    global.currency
+  );
   // added by Abdelwahab
   const smsOptions = {
-    body: ` عزيزي ${student.name}
-    تم الدفع بنجاح في حسابك بقيمة${global.price + " " + global.currency}
-    شكرا لك على استخدامك منصة مسقط لتعليم قيادة السيارات,
-    فريق مسقط لتعليم قيادة السيارات
-  `,
+    body: generateChargeConfirmationSMSBody(
+      language,
+      student.name,
+      global.price,
+      global.currency
+    ),
     to: student.phoneNumber,
   };
   sendEmail(mailOptions, smsOptions);
@@ -373,7 +379,8 @@ const bookingSuccess = async (req, res) => {
 
   global.session_id = null;
   await FinancialRecord.create({
-    amount: session.price,
+    amount: session.price * session.period,
+    currency: session.currency,
     type: "booking",
     TeacherId: session.TeacherId,
     StudentId,
@@ -413,7 +420,7 @@ const bookingSuccess = async (req, res) => {
     subject: "منصة مسقط لتعليم قيادة السيارات : تأكيد الدفع بنجاح",
     html: `<div style="text-align: right;">عزيزي ${student.name},<br>
     تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${
-      global.price + " " + session.currency
+      session.price * session.period + " " + session.currency
     } <br>
     شكرا لك على استخدامك منصة مسقط لتعليم قيادة السيارات<br>,
     فريق مسقط لتعليم قيادة السيارات
@@ -423,7 +430,7 @@ const bookingSuccess = async (req, res) => {
   const smsOptions1 = {
     body: `عزيزي ${student.name},
     تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${
-      global.price + " " + session.currency
+      session.price * session.period + " " + session.currency
     } 
     شكرا لك على استخدامك منصة مسقط لتعليم قيادة السيارات
     فريق مسقط لتعليم قيادة السيارات

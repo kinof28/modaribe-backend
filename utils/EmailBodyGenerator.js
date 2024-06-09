@@ -114,7 +114,63 @@ const generateWelcomeEmailBody = (language, name, email) => {
     `,
   };
 };
+const generateChargeConfirmationEmail = (
+  language,
+  email,
+  name,
+  price,
+  currency
+) => {
+  return language === "en"
+    ? {
+        from: process.env.APP_EMAIL,
+        to: email,
+        subject: "Payment Confirmation from Muscat Driving School",
+        html: `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+    <div style="text-align: center; padding: 10px 0; background-color: #f4f4f4; border-bottom: 1px solid #ddd;">
+        <h1>Payment Confirmation</h1>
+    </div>
+    <div style="padding: 20px;">
+        <p>Dear ${name},</p>
+        <p>We are pleased to inform you that your payment of ${price} ${currency} has been successfully processed. Thank you for your prompt payment and for choosing Muscat Driving School.</p>
+        <p>If you have any questions or need further assistance, please feel free to reach out to our support team at <a href="mailto:info@muscatdrivingschool.com">info@muscatdrivingschool.com</a>.</p>
+        <p>Thank you once again for your business!</p>
+        <p>Best regards,</p>
+        Muscat Driving School<br>
+        <a href="muscatdrivingschool.com">muscatdrivingschool.com</a><br>
+    </div>
+    <div style="margin-top: 20px; padding: 10px; text-align: center; background-color: #f4f4f4; border-top: 1px solid #ddd;">
+        <p>Muscat Driving School ©. All rights reserved.</p>
+    </div>
+</div>
+`,
+      }
+    : {
+        from: process.env.APP_EMAIL,
+        to: email,
+        subject: " تأكيد الدفع من مسقط لتعليم قيادة السيارات",
+        html: `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; direction: rtl;">
+        <div style="text-align: center; padding: 10px 0; background-color: #f4f4f4; border-bottom: 1px solid #ddd;">
+            <h1>تأكيد الدفع</h1>
+        </div>
+        <div style="padding: 20px;">
+            <p>عزيزي/عزيزتي ${name}،</p>
+            <p>يسعدنا إبلاغك بأن دفعتك بمقدار ${price} ${currency} قد تمت بنجاح. شكراً لك على دفعك الفوري واختيارك لـمسقط لتعليم قيادة السيارات.</p>
+            <p>إذا كان لديك أي أسئلة أو تحتاج إلى مساعدة إضافية، لا تتردد في التواصل مع فريق الدعم لدينا على <a href="mailto:info@muscatdrivingschool.com">info@muscatdrivingschool.com</a>.</p>
+            <p>شكراً مرة أخرى لتعاملك معنا!</p>
+            <p>أطيب التحيات،</p>
+            مسقط لتعليم قيادة السيارات<br>
+            <a href="muscatdrivingschool.com">muscatdrivingschool.com</a><br>
+        </div>
+        <div style="margin-top: 20px; padding: 10px; text-align: center; background-color: #f4f4f4; border-top: 1px solid #ddd;">
+            <p>مسقط لتعليم قيادة السيارات ©. جميع الحقوق محفوظة.</p>
+        </div>
+    </div>
+     `,
+      };
+};
 module.exports = {
   generateConfirmEmailBody,
   generateWelcomeEmailBody,
+  generateChargeConfirmationEmail,
 };

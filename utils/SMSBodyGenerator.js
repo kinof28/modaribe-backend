@@ -18,8 +18,64 @@ const generateChargeConfirmationSMSBody = (language, name, price, currency) => {
     : `مرحباً ${name}، دفعتك بمقدار ${price} ${currency} إلى مسقط لتعليم قيادة السيارات تمت بنجاح. شكراً لك!
     `;
 };
+const generateSessionConfirmationSMSBody = (
+  language,
+  studentName,
+  teacherName,
+  date,
+  type,
+  duration
+) => {
+  return language === "en"
+    ? `
+  Hello ${studentName}, your session with ${teacherName} on ${date.slice(
+        0,
+        date.indexOf("*")
+      )} at ${date.slice(date.indexOf("*") + 1)} for ${
+        duration + duration > 1 ? "hours" : "hour"
+      } has been confirmed. Location: ${type}. We're excited to see you there!.
+`
+    : `
+مرحباً ${studentName}، تم تأكيد جلستك مع ${teacherName} في ${date.slice(
+        0,
+        date.indexOf("*")
+      )} الساعة ${date.slice(
+        date.indexOf("*") + 1
+      )}لمدة ${duration} ساعة. المكان: ${type}. نحن متحمسون لرؤيتك هناك!`;
+};
+const generateSessionPaymentConfirmationSMS = (
+  language,
+  studentName,
+  teacherName,
+  date,
+  type,
+  duration,
+  price,
+  currency
+) => {
+  return language === "en"
+    ? `
+  Hello ${studentName}, your payment of ${price} ${currency} for the session on ${date.slice(
+        0,
+        date.indexOf("*")
+      )} at ${date.slice(date.indexOf("*") + 1)} for ${
+        duration + duration > 1 ? "hours" : "hour"
+      } with ${teacherName} has been successfully processed. Location: ${type}. Thank you!
+  `
+    : `
+    مرحباً ${studentName}، تم تأكيد دفع مبلغ ${price} ${currency} لجلسة التدريب بتاريخ ${date.slice(
+        0,
+        date.indexOf("*")
+      )} الساعة ${date.slice(
+        date.indexOf("*") + 1
+      )} لمدة ${duration} ساعة. المكان:  ${type}. مع المدرب ${teacherName}. شكراً لك!
+
+    `;
+};
 module.exports = {
   generateConfirmEmailSMSBody,
   generateWelcomeSMSBody,
   generateChargeConfirmationSMSBody,
+  generateSessionConfirmationSMSBody,
+  generateSessionPaymentConfirmationSMS,
 };

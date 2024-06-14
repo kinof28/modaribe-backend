@@ -16,9 +16,14 @@ const sendEmail = require("../middlewares/sendEmail");
 const dotenv = require("dotenv");
 const {
   generateChargeConfirmationEmail,
+  generateSessionConfirmationEmail,
+  generateTeacherSessionNoticeEmail,
+  generateSessionPaymentConfirmation,
 } = require("../utils/EmailBodyGenerator");
 const {
   generateChargeConfirmationSMSBody,
+  generateSessionConfirmationSMSBody,
+  generateSessionPaymentConfirmationSMS,
 } = require("../utils/SMSBodyGenerator");
 dotenv.config();
 const charge = async (req, res) => {
@@ -155,6 +160,7 @@ const booking = async (req, res) => {
     type,
     date,
     period,
+    language,
   } = req.body;
 
   const createSession = async () => {
@@ -283,57 +289,47 @@ const booking = async (req, res) => {
       date: Date.now(),
     });
 
-    const mailOptions = {
-      from: process.env.APP_EMAIL,
-      to: student.email,
-      subject: "MDS: confirm - session with trainer",
-      // subject: "منصة مسقط لتعليم قيادة السيارات: التأكيد - جلستك مع المعلم",
-      html: `<div style="text-align: right;">عزيزي ${student.name},<br>
-      تمت جدولة جلستك مع مدربك ${teacher.firstName} ${teacher.lastName} بنجاح.
-      ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>
-      يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
-       .مفيدة لتقدمك الأكاديمي<br>.هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع مدربك وتلقي إرشادات حول أدائك الأكاديمي<br>
-       ,حظ سعيد<br>
-      فريق مسقط لتعليم قيادة السيارات
-      </div> `,
-    };
+    const mailOptions = generateSessionConfirmationEmail(
+      language,
+      student.email,
+      student.name,
+      teacher.firstName + " " + teacher.lastName,
+      session.date,
+      session.type,
+      session.period
+    );
     // added by Abdelwahab
     const smsOptions = {
-      body: ` عزيزي ${student.name}
-      تمت جدولة جلستك مع مدربك ${teacher.firstName} ${teacher.lastName} بنجاح.
-      ستتم جلستك في ${session.date} وستنعقد ${session.type}.
-      . يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون مفيدة لتقدمك الأكاديمي
-       .هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع مدربك وتلقي إرشادات حول أدائك الأكاديمي
-       ,حظ سعيد
-      فريق مسقط لتعليم قيادة السيارات
-  `,
+      body: generateSessionConfirmationSMSBody(
+        language,
+        student.name,
+        teacher.firstName + " " + teacher.lastName,
+        session.date,
+        session.type,
+        session.period
+      ),
       to: student.phoneNumber,
     };
     sendEmail(mailOptions, smsOptions);
 
-    const mailOption = {
-      from: process.env.APP_EMAIL,
-      to: teacher.email,
-      subject: "منصة مسقط لتعليم قيادة السيارات: تأكيد الحجز الناجح للجلسة",
-      html: `<div style="text-align: right;">عزيزي ${teacher.firstName} ${teacher.lastName},<br>
-      أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.<br>
-      يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. <br>
-      نحن نقدر فرصة التعلم من 
-      مدرب ذو معرفة وخبرة مثلك.<br>
-      حظ سعيد,<br>
-      فريق مسقط لتعليم قيادة السيارات
-      </div> `,
-    };
-
-    // added by Abdelwahab
+    const mailOption = generateTeacherSessionNoticeEmail(
+      language,
+      teacher.email,
+      teacher.firstName + " " + teacher.lastName,
+      student.name,
+      session.date,
+      session.type,
+      session.period
+    );
     const smsOptions2 = {
-      body: `عزيزي ${teacher.firstName} ${teacher.lastName},
-      أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.
-      يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. 
-       نحن نقدر فرصة التعلم من مدرب ذو معرفة وخبرة مثلك.
-      حظ سعيد,
-      فريق مسقط لتعليم قيادة السيارات
-  `,
+      body: generateSessionConfirmationSMSBody(
+        language,
+        teacher.firstName + " " + teacher.lastName,
+        student.name,
+        session.date,
+        session.type,
+        session.period
+      ),
       to: teacher.phone,
     };
     sendEmail(mailOption, smsOptions2);
@@ -350,6 +346,7 @@ const booking = async (req, res) => {
 };
 
 const bookingSuccess = async (req, res) => {
+  const { language } = req.body;
   let options = {
     method: "GET",
     headers: {
@@ -414,83 +411,76 @@ const bookingSuccess = async (req, res) => {
     date: Date.now(),
   });
 
-  const mailOptions1 = {
-    from: process.env.APP_EMAIL,
-    to: student.email,
-    subject: "منصة مسقط لتعليم قيادة السيارات : تأكيد الدفع بنجاح",
-    html: `<div style="text-align: right;">عزيزي ${student.name},<br>
-    تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${
-      session.price * session.period + " " + session.currency
-    } <br>
-    شكرا لك على استخدامك منصة مسقط لتعليم قيادة السيارات<br>,
-    فريق مسقط لتعليم قيادة السيارات
-    </div> `,
-  };
-  // added by Abdelwahab
+  const mailOptions1 = generateSessionPaymentConfirmation(
+    language,
+    student.email,
+    student.name,
+    teacher.firstName + " " + teacher.lastName,
+    session.date,
+    session.type,
+    session.period,
+    session.price,
+    session.totalPrice,
+    session.currency
+  );
   const smsOptions1 = {
-    body: `عزيزي ${student.name},
-    تم الدفع من خلال بوابة ثواني بنجاح في حسابك بقيمة${
-      session.price * session.period + " " + session.currency
-    } 
-    شكرا لك على استخدامك منصة مسقط لتعليم قيادة السيارات
-    فريق مسقط لتعليم قيادة السيارات
-  `,
+    body: generateSessionPaymentConfirmationSMS(
+      language,
+      student.name,
+      teacher.firstName + " " + teacher.lastName,
+      session.date,
+      session.type,
+      session.period,
+      session.totalPrice,
+      session.currency
+    ),
     to: student.phoneNumber,
   };
   sendEmail(mailOptions1, smsOptions1);
 
-  const mailOptions = {
-    from: process.env.APP_EMAIL,
-    to: student.email,
-    subject: "MDS: confirm - session with trainer",
-    // subject: "منصة مسقط لتعليم قيادة السيارات: التأكيد - جلستك مع المعلم",
-    html: `<div style="text-align: right;">عزيزي ${student.name},<br>
-      تمت جدولة جلستك مع مدربك ${teacher.firstName} ${teacher.lastName} بنجاح.
-      ستتم جلستك في ${session.date} وستنعقد ${session.type}.<br>
-      يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
-       .مفيدة لتقدمك الأكاديمي<br>.هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع مدربك وتلقي إرشادات حول أدائك الأكاديمي<br>
-       ,حظ سعيد<br>
-      فريق مسقط لتعليم قيادة السيارات
-      </div> `,
-  };
+  const mailOptions = generateSessionConfirmationEmail(
+    language,
+    student.email,
+    student.name,
+    teacher.firstName + " " + teacher.lastName,
+    session.date,
+    session.type,
+    session.period
+  );
+
   // added by Abdelwahab
   const smsOptions = {
-    body: `عزيزي ${student.name},
-      تمت جدولة جلستك مع مدربك ${teacher.firstName} ${teacher.lastName} بنجاح.
-      ستتم جلستك في ${session.date} وستنعقد ${session.type}.
-      يسعدنا أنك بادرت بحجز هذه الجلسة ، ونحن على ثقة من أنها ستكون 
-       .مفيدة لتقدمك الأكاديمي
-       .هذه الجلسة هي فرصة ممتازة لك لمناقشة أي أسئلة أو مخاوف قد تكون لديك مع مدربك وتلقي إرشادات حول أدائك الأكاديمي
-       ,حظ سعيد
-      فريق مسقط لتعليم قيادة السيارات
-  `,
+    body: generateSessionConfirmationSMSBody(
+      language,
+      student.name,
+      teacher.firstName + " " + teacher.lastName,
+      session.date,
+      session.type,
+      session.period
+    ),
     to: student.phoneNumber,
   };
   sendEmail(mailOptions, smsOptions);
 
-  const mailOption = {
-    from: process.env.APP_EMAIL,
-    to: teacher.email,
-    subject: "منصة مسقط لتعليم قيادة السيارات: تأكيد الحجز الناجح للجلسة",
-    html: `<div style="text-align: right;">عزيزي ${teacher.firstName} ${teacher.lastName},<br>
-      أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.<br>
-      يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. <br>
-      نحن نقدر فرصة التعلم من 
-      مدرب ذو معرفة وخبرة مثلك.<br>
-      حظ سعيد,<br>
-      فريق مسقط لتعليم قيادة السيارات
-      </div> `,
-  };
-  // added by Abdelwahab
+  const mailOption = generateTeacherSessionNoticeEmail(
+    language,
+    teacher.email,
+    teacher.firstName + " " + teacher.lastName,
+    student.name,
+    session.date,
+    session.type,
+    session.period
+  );
+
   const smsOptions3 = {
-    body: `عزيزي ${teacher.firstName} ${teacher.lastName},
-      أكتب لأؤكد أن ${student.name} قد حجز جلسة معك بنجاح. تم تحديد موعد الجلسة في ${session.date}.
-      يتطلع ${student.name} حقًا إلى الجلسة وهو متحمس للتعلم منك. 
-      نحن نقدر فرصة التعلم من 
-      مدرب ذو معرفة وخبرة مثلك.
-      حظ سعيد,
-      فريق مسقط لتعليم قيادة السيارات
-  `,
+    body: generateSessionConfirmationSMSBody(
+      language,
+      teacher.firstName + " " + teacher.lastName,
+      student.name,
+      session.date,
+      session.type,
+      session.period
+    ),
     to: teacher.phone,
   };
   sendEmail(mailOption, smsOptions3);
